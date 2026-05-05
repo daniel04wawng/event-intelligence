@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  api:
+    build: { context: ../../apps/api, dockerfile: ../../infra/docker/Dockerfile.api }
+    ports: ["8000:8000"]
+    volumes: ["../../apps/api:/app", "../../packages:/packages"]
+    env_file: ["../../.env"]
+    depends_on: [db, redis]
+  web:
+    build: { context: ../../apps/web, dockerfile: ../../infra/docker/Dockerfile.web }
+    ports: ["5173:5173"]
+  db:
+    image: postgres:16
+    environment: { POSTGRES_USER: user, POSTGRES_PASSWORD: password, POSTGRES_DB: event_intel }
+    ports: ["5432:5432"]
+    volumes: [postgres_data:/var/lib/postgresql/data]
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+volumes:
+  postgres_data:
