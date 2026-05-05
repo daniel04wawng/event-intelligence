@@ -32,57 +32,68 @@ cd apps/web && npm install
 docker-compose -f infra/docker/docker-compose.dev.yml up
 ```
 
-## Event Intelligence MVP
+## Agentic Ops MVP
 
-The Event Intelligence layer answers *who should be in the room and why?* It
-is a small, rule-based pipeline that runs end-to-end with one command and
-produces structured artifacts that the Agentic Ops branch consumes.
+Layer 2 of OneLoop. Consumes Event Intelligence outputs and produces the actual
+ops needed to run a 100-person curated event in one week: outreach drafts,
+guest/venue/sponsor CRMs, RSVP + retention math, and a basic run-of-show.
 
 **What it does**
-- Normalizes a raw event brief into a structured objective.
-- Defines target ICP and avoid personas, plus an explainable scoring rubric.
-- Generates sourcing queries / channels and ingests an optional seed CSV.
-- Scores each prospect (0-100) with a transparent reason breakdown.
-- Analyzes room balance and surfaces sourcing gaps.
+- Generates workstreams, blockers, next actions, and a one-week timeline.
+- Drafts personalized outreach per ranked prospect (channel-aware: email / LinkedIn / Poke).
+- Builds guest, venue, and sponsor/partner CRMs.
+- Computes RSVP / retention math (over-invite target, per-guest risk, reminder cadence).
+- Produces a basic ops checklist and run-of-show.
+- Ingests replies from `data/replies.csv` and updates all CRMs in place.
 
 **How to run**
 ```bash
-python -m packages.agents.run_intelligence
-# optional: python -m packages.agents.run_intelligence <brief_path> <seed_csv_path>
+python -m packages.ops.run_ops
+# later, when replies arrive
+python -m packages.ops.reply_tracker
 ```
 
-**Inputs**
-- `data/event_brief.txt` — raw brief (required)
-- `data/people_seed.csv` — seed prospects (optional)
+**Inputs (consumed from Event Intelligence)**
+- `data/event_state.json`
+- `data/ranked_people.csv`
+- `docs/intelligence_summary.md` (optional)
 
 **Outputs**
-- `data/event_state.json` — canonical shared state (handoff to Agentic Ops)
-- `data/ranked_people.csv` — scored, ranked prospects (handoff to Agentic Ops)
-- `docs/intelligence_summary.md` — human-readable rollup
-- `docs/agent_activity_log.md` — human-readable agent trace
-- `logs/agent_runs.jsonl` — machine-readable agent trace
-- `docs/structure_map.md` — full architecture / file map / modification guide
+- `data/outreach_queue.csv`, `data/guest_crm.csv`, `data/venue_crm.csv`,
+  `data/sponsor_partner_crm.csv`, `data/retention_tracker.csv`
+- `docs/run_of_show.md`, `docs/basic_ops_checklist.md`,
+  `docs/one_week_timeline.md`, `docs/retention_plan.md`,
+  `docs/ops_summary.md`, `docs/structure_map.md`
+- `drafts/venue_outreach_email.md`, `drafts/sponsor_partner_outreach.md`,
+  `drafts/luma_event_page.md`, `drafts/poke_messages.csv`, `drafts/emails/*.md`
+- updates to `data/event_state.json` (`ops`, `venues`, `sponsors`, `state`, `visibility` only)
+- appends to `logs/agent_runs.jsonl` and `docs/agent_activity_log.md`
 
-**How Agentic Ops consumes the outputs**
-- Read `data/event_state.json` and `data/ranked_people.csv`.
-- Filter `priority == "high"` for first-wave outreach.
-- Use `why_relevant` and `tags` to personalize.
-- Write back into `state.ops.*` and `state.people.{approved,waitlist,rejected}`.
-- Treat `state.intelligence.*` and `state.people.ranked_prospects` as read-only.
+**Stubbed (no real auth/network)** — see `packages/integrations/*_stub.py`:
+Gmail draft creation, Google Sheets sync, Poke/LinkedIn message queue, Luma
+event-page creation. Each stub has the same shape its real connector will
+have, so swapping them in later is local to one file.
 
 **Branch coordination**
-- This branch (`feature/event-intelligence-mvp`) defines the shared schema in
-  `packages/shared/event_state.py` and the visibility layer in
-  `packages/shared/visibility.py`. Treat both as the API between branches.
-- The sister branch (`feature/agentic-ops-mvp`) consumes the outputs above.
+- This branch: `feature/agentic-ops-mvp`. Sister branch:
+  `feature/event-intelligence-mvp`.
+- Shared contract: `packages/shared/event_state.py`,
+  `packages/shared/visibility.py`, `data/event_state.json`,
+  `data/ranked_people.csv`, `logs/agent_runs.jsonl`,
+  `docs/agent_activity_log.md`, `docs/structure_map.md`.
+- Agentic Ops only writes `event_state.{ops,venues,sponsors,state,visibility}`;
+  Event Intelligence owns `event_state.{event,intelligence,people}`.
 
 **Visibility / observability**
-Every agent run appends a structured trace entry (run_id, timestamp, agent,
-input/output summary, decisions, reasoning summary, confidence, files
-read/written, blockers, next actions) to both the JSONL log and the
-Markdown activity log. No private chain-of-thought is exposed.
+Every ops agent appends a structured trace (`run_id`, `timestamp`,
+`branch_context="agentic_ops"`, `agent_name`, `input_summary`,
+`output_summary`, `decisions_made`, `reasoning_summary`, `confidence`,
+`files_read`, `files_written`, `blockers`, `next_actions`) to
+`logs/agent_runs.jsonl` and a human-readable entry to
+`docs/agent_activity_log.md`. No private chain-of-thought is exposed.
 
-See [docs/structure_map.md](docs/structure_map.md) for the full architecture, file map, data flow, and modification guide.
+See [docs/structure_map.md](docs/structure_map.md) for the full architecture,
+file map, data flow, and modification guide.
 
 ## Docs
 
