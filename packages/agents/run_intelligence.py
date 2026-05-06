@@ -18,6 +18,7 @@ Outputs:
 from __future__ import annotations
 
 import sys
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -46,7 +47,17 @@ SUMMARY_MD = "docs/intelligence_summary.md"
 STRUCTURE_MAP = "docs/structure_map.md"
 
 
-def _write_intelligence_summary(state: dict[str, Any], path: str = SUMMARY_MD) -> None:
+@dataclass(frozen=True)
+class PipelineConfig:
+    """Output locations — override in tests or alternate deployments."""
+
+    event_state_path: Path = Path(EVENT_STATE_PATH)
+    ranked_csv_path: Path = Path(RANKED_CSV)
+    summary_md_path: Path = Path(SUMMARY_MD)
+    structure_map_path: Path = Path(STRUCTURE_MAP)
+
+
+def _write_intelligence_summary(state: dict[str, Any], path: Path) -> None:
     out_path = Path(path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     ev = state.get("event", {})
@@ -61,9 +72,10 @@ def _write_intelligence_summary(state: dict[str, Any], path: str = SUMMARY_MD) -
         "",
         f"_Generated {datetime.now(timezone.utc).isoformat()}_",
         "",
-        "## 1. Event Objective",
-        f"- **Goal:** {ev.get('goal', '')}",
-        f"- **Format:** {ev.get('format', '')}",
+        "## 1. Organizer intent → structured objective",
+        f"- **Event type:** {ev.get('format', '')}",
+        f"- **Who we want:** {ev.get('desired_attendees', '') or '_(see full brief / downstream ICP)_'}",
+        f"- **Overall goal:** {ev.get('goal', '')}",
         f"- **City:** {ev.get('city', '')}",
         f"- **Target size:** {ev.get('target_size', '')}",
         "- **Success metrics:**",
@@ -129,14 +141,12 @@ def _write_intelligence_summary(state: dict[str, Any], path: str = SUMMARY_MD) -
     out_path.write_text("\n".join(lines) + "\n")
 
 
-def _ensure_structure_map(path: str = STRUCTURE_MAP) -> None:
-    """Touch the structure map only if missing — the canonical version lives
-    in the repo and is human-edited. Pipeline appends a 'last run' marker."""
+def _ensure_structure_map(path: Path) -> None:
+    """Append/update last-run marker on structure_map."""
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     marker = f"\n\n<!-- last pipeline run: {datetime.now(timezone.utc).isoformat()} -->\n"
     if p.exists():
-        # rewrite trailing marker
         existing = p.read_text()
         if "<!-- last pipeline run:" in existing:
             head = existing.split("<!-- last pipeline run:")[0].rstrip()
@@ -144,34 +154,53 @@ def _ensure_structure_map(path: str = STRUCTURE_MAP) -> None:
         else:
             with p.open("a") as f:
                 f.write(marker)
+    else:
+        with p.open("a") as f:
+            f.write(marker)
 
 
-def main(argv: list[str] | None = None) -> int:
-    argv = argv or sys.argv[1:]
-    brief_path = argv[0] if len(argv) > 0 else BRIEF_PATH
-    seed_path = argv[1] if len(argv) > 1 else SEED_CSV
+def run_pipeline(
+    brief_text: str,
+    *,
+    seed_csv_path: str | Path | None = None,
+    config: PipelineConfig | None = None,
+    brief_source_label: str = "inline",
+    quiet: bool = False,
+) -> tuple[int, dict[str, Any]]:
+    """Execute objective → audience → sourcing → scoring → room balance + artifact writes.
+
+    Returns ``(exit_code, summary)`` where ``exit_code`` is ``2`` for empty brief, else ``0``.
+    ``summary`` includes paths and counts for API/clients.
+    """
+    cfg = config or PipelineConfig()
+    seed_str = str(seed_csv_path) if seed_csv_path else ""
+    seed_exists = bool(seed_str and Path(seed_str).exists())
+
+    if not (brief_text or "").strip():
+        return 2, {"error": "empty_brief"}
 
     pipeline_run_id = create_run_id("run_intelligence")
     state = empty_event_state()
-    state["event"]["name"] = "AI Builder Event MVP"
 
-    brief = read_event_brief(brief_path)
-    if not brief:
-        print(f"[run_intelligence] No brief found at {brief_path}; aborting.", file=sys.stderr)
-        return 2
+    brief = brief_text.strip()
 
-    # 1. Objective
     objective = objective_agent.run(brief, event_state=state)
-    # 2. Audience
-    audience = audience_agent.run(objective, event_state=state)
-    # 3. Sourcing (ingests seed CSV if present)
+    if not (state.get("event") or {}).get("name"):
+        et = (objective.get("event_type") or "").strip()
+        city = (objective.get("city") or "").strip()
+        state.setdefault("event", {})["name"] = (
+            " — ".join(p for p in (et, city) if p) or "Untitled event"
+        )
+
+    audience = audience_agent.run(objective, event_state=state, event_brief=brief)
     sourcing = sourcing_agent.run(
-        objective, audience,
-        seed_csv_path=seed_path if Path(seed_path).exists() else None,
+        objective,
+        audience,
+        seed_csv_path=seed_str if seed_exists else None,
         event_state=state,
+        event_brief=brief,
     )
 
-    # 4. Score prospects
     prospects = state.get("people", {}).get("prospects", []) or sourcing.get("prospects", [])
     ranked = score_all(
         prospects,
@@ -182,32 +211,52 @@ def main(argv: list[str] | None = None) -> int:
     )
     state.setdefault("people", {})["ranked_prospects"] = ranked
 
-    # 5. Room balance
     room_balance_agent.run(ranked, target_size=objective.get("target_size", 100), event_state=state)
 
-    # Write outputs
     files_written: list[str] = []
-    save_event_state(EVENT_STATE_PATH, state)
-    files_written.append(EVENT_STATE_PATH)
-    write_ranked_people_csv(RANKED_CSV, ranked)
-    files_written.append(RANKED_CSV)
-    _write_intelligence_summary(state, SUMMARY_MD)
-    files_written.append(SUMMARY_MD)
-    _ensure_structure_map(STRUCTURE_MAP)
-    files_written.append(STRUCTURE_MAP)
+    esp = cfg.event_state_path
+    rcp = cfg.ranked_csv_path
+    smp = cfg.summary_md_path
+    stm = cfg.structure_map_path
 
-    # Update visibility pointer in state
-    state.setdefault("visibility", {})["latest_summary_files"] = [SUMMARY_MD, STRUCTURE_MAP]
-    save_event_state(EVENT_STATE_PATH, state)
+    save_event_state(str(esp), state)
+    files_written.append(str(esp))
+    write_ranked_people_csv(str(rcp), ranked)
+    files_written.append(str(rcp))
+    _write_intelligence_summary(state, smp)
+    files_written.append(str(smp))
+    _ensure_structure_map(stm)
+    files_written.append(str(stm))
+
+    state.setdefault("visibility", {})["latest_summary_files"] = [str(smp), str(stm)]
+    save_event_state(str(esp), state)
+
+    db_status = "skipped"
+    try:
+        from packages.shared import db as _db
+        if _db.is_db_enabled():
+            event_id = _db.upsert_event(state, brief_text=brief)
+            if event_id is not None:
+                state["_db_event_id"] = str(event_id)
+                rows = _db.upsert_people(event_id, ranked)
+                db_status = f"ok ({rows} people upserted, event_id={event_id})"
+            else:
+                db_status = "upsert_event returned None"
+    except Exception as e:
+        db_status = f"error: {e!r}"
 
     high = [p for p in ranked if p.get("priority") == "high"]
     rb = state.get("intelligence", {}).get("room_balance", {})
     top_gap = rb.get("top_gap")
 
+    files_read = [brief_source_label]
+    if seed_exists:
+        files_read.append(seed_str)
+
     log_agent_run(
         "run_intelligence",
         run_id=pipeline_run_id,
-        input_summary=f"brief={brief_path}, seed={seed_path if Path(seed_path).exists() else 'none'}",
+        input_summary=f"brief={brief_source_label}, seed={seed_str if seed_exists else 'none'}",
         output_summary=(
             f"Pipeline complete: {len(ranked)} prospects scored, "
             f"{len(high)} high-priority, top_gap={top_gap['persona'] if top_gap else 'none'}."
@@ -215,29 +264,62 @@ def main(argv: list[str] | None = None) -> int:
         decisions_made=["Ran objective → audience → sourcing → scoring → room_balance pipeline."],
         reasoning_summary="Sequential pipeline; each stage writes to event_state and emits its own visibility trace.",
         confidence="medium",
-        files_read=[brief_path] + ([seed_path] if Path(seed_path).exists() else []),
+        files_read=files_read,
         files_written=files_written,
         next_actions=["Hand event_state.json + ranked_people.csv to Agentic Ops branch."],
         event_state=state,
     )
-    save_event_state(EVENT_STATE_PATH, state)
+    save_event_state(str(esp), state)
 
-    # Console summary
-    print()
-    print("=" * 60)
-    print("Event Intelligence pipeline complete.")
-    print("=" * 60)
-    print(f"Prospects scored      : {len(ranked)}")
-    print(f"High-priority         : {len(high)}")
-    print(f"Top room-balance gap  : {top_gap['persona'] if top_gap else 'none'}")
-    print("Files written         :")
-    for f in files_written:
-        print(f"  - {f}")
-    print("  - logs/agent_runs.jsonl")
-    print("  - docs/agent_activity_log.md")
-    print()
-    print("Next: python -m packages.ops.run_ops")
-    return 0
+    summary: dict[str, Any] = {
+        "event_state_path": str(esp.resolve()),
+        "ranked_people_csv_path": str(rcp.resolve()),
+        "intelligence_summary_path": str(smp.resolve()),
+        "structure_map_path": str(stm.resolve()),
+        "ranked_count": len(ranked),
+        "high_priority_count": len(high),
+        "top_gap_persona": top_gap["persona"] if top_gap else None,
+        "db_status": db_status,
+        "files_written": files_written,
+    }
+
+    if not quiet:
+        print()
+        print("=" * 60)
+        print("Event Intelligence pipeline complete.")
+        print("=" * 60)
+        print(f"Database              : {db_status}")
+        print(f"Prospects scored      : {len(ranked)}")
+        print(f"High-priority         : {len(high)}")
+        print(f"Top room-balance gap  : {top_gap['persona'] if top_gap else 'none'}")
+        print("Files written         :")
+        for f in files_written:
+            print(f"  - {f}")
+        print("  - logs/agent_runs.jsonl")
+        print("  - docs/agent_activity_log.md")
+        print()
+        print("Next: plug this pipeline into your orchestrator (API, MCP tools, or chat UI).")
+
+    return 0, summary
+
+
+def main(argv: list[str] | None = None) -> int:
+    argv = argv or sys.argv[1:]
+    brief_path = argv[0] if len(argv) > 0 else BRIEF_PATH
+    seed_path = argv[1] if len(argv) > 1 else SEED_CSV
+
+    brief = read_event_brief(brief_path)
+    if not brief:
+        print(f"[run_intelligence] No brief found at {brief_path}; aborting.", file=sys.stderr)
+        return 2
+
+    code, _ = run_pipeline(
+        brief,
+        seed_csv_path=seed_path if Path(seed_path).exists() else None,
+        brief_source_label=str(brief_path),
+        quiet=False,
+    )
+    return code
 
 
 if __name__ == "__main__":

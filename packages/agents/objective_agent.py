@@ -1,17 +1,28 @@
-"""Objective Agent — normalizes a raw event brief into a structured objective.
+"""Objective Agent — normalizes organizer input into a structured objective.
 
-This is a deterministic, rule-based MVP. Future versions can swap in an LLM
-call without changing the public interface.
+Pulls three pillars when possible (event type, desired attendees, overall goal)
+via intent_extractor (LLM when configured, else labeled-section parsing), then
+fills size/city with lightweight heuristics.
 """
 from __future__ import annotations
 
 import re
 from typing import Any, Optional
 
+from packages.agents.intent_extractor import extract_event_intent
 from packages.shared.visibility import create_run_id, log_agent_run
 
 
 AGENT_NAME = "objective_agent"
+
+# Baseline checklist merged into state / preview — surfaced until brief has answers.
+DEFAULT_OPEN_QUESTIONS: list[str] = [
+    "Is the event public or invite-only?",
+    "Is there a sponsor or partner goal?",
+    "Is the venue already secured?",
+    "What is the exact date and time?",
+    "Who is the primary host / face of the event?",
+]
 
 
 def _extract_int(text: str, default: int) -> int:
@@ -44,26 +55,56 @@ def _extract_event_type(text: str) -> str:
     return "curated tech community event"
 
 
+def _coerce_size(value: Any, brief: str, default: int) -> int:
+    if isinstance(value, int) and value > 0:
+        return value
+    if isinstance(value, float) and value > 0:
+        return int(value)
+    if isinstance(value, str) and value.strip().isdigit():
+        return int(value.strip())
+    return _extract_int(brief, default)
+
+
 def run(brief: str, constraints: Optional[dict[str, Any]] = None,
-        event_state: Optional[dict[str, Any]] = None) -> dict[str, Any]:
-    """Run the Objective Agent. Returns a structured objective dict."""
+        event_state: Optional[dict[str, Any]] = None,
+        *,
+        intent: Optional[dict[str, Any]] = None,
+        persist_visibility: bool = True) -> dict[str, Any]:
+    """Run the Objective Agent. Returns a structured objective dict.
+
+    Pass ``intent`` when you already called ``extract_event_intent`` (e.g. preview UIs)
+    to avoid duplicate LLM calls.
+    """
     constraints = constraints or {}
     run_id = create_run_id(AGENT_NAME)
 
-    target_size = constraints.get("target_size") or _extract_int(brief, 100)
-    city = constraints.get("city") or _extract_city(brief)
-    event_type = constraints.get("event_type") or _extract_event_type(brief)
+    intent = intent if intent is not None else extract_event_intent(brief)
 
-    # derive a goal sentence: first sentence with "goal" if present, else summary line
-    goal = ""
-    m = re.search(r"goal[^.]*\.", brief, flags=re.IGNORECASE)
-    if m:
-        goal = m.group(0).strip()
-    else:
-        # fall back to the longest sentence
-        sentences = [s.strip() for s in re.split(r"[.\n]", brief) if s.strip()]
-        if sentences:
-            goal = max(sentences, key=len)
+    target_size = constraints.get("target_size") or _coerce_size(
+        intent.get("target_size"), brief, 100
+    )
+    city = (constraints.get("city") or intent.get("city") or "").strip() or _extract_city(brief)
+
+    event_type = (
+        constraints.get("event_type")
+        or (intent.get("event_type") or "").strip()
+        or _extract_event_type(brief)
+    )
+
+    desired_attendees = (intent.get("desired_attendees") or "").strip()
+
+    # Goal: structured intent first, then legacy heuristic on full brief
+    goal = (intent.get("overall_goal") or "").strip()
+    if not goal:
+        m = re.search(r"goal[^.]*\.", brief, flags=re.IGNORECASE)
+        if m:
+            goal = m.group(0).strip()
+        else:
+            sentences = [s.strip() for s in re.split(r"[.\n]", brief) if s.strip()]
+            if sentences:
+                goal = max(sentences, key=len)
+
+    event_name = (intent.get("event_name") or "").strip()
 
     success_metrics = [
         f"{target_size} RSVPs",
@@ -72,26 +113,25 @@ def run(brief: str, constraints: Optional[dict[str, Any]] = None,
         "10 meaningful post-event follow-ups",
     ]
 
-    open_questions = [
-        "Is the event public or invite-only?",
-        "Is there a sponsor or partner goal?",
-        "Is the venue already secured?",
-        "What is the exact date and time?",
-        "Who is the primary host / face of the event?",
-    ]
+    open_questions = list(DEFAULT_OPEN_QUESTIONS)
 
     objective = {
         "goal": goal,
         "event_type": event_type,
+        "desired_attendees": desired_attendees,
         "target_size": target_size,
         "city": city,
         "success_metrics": success_metrics,
         "open_questions": open_questions,
+        "event_name": event_name,
     }
 
     if event_state is not None:
         ev = event_state.setdefault("event", {})
+        if event_name:
+            ev["name"] = event_name
         ev["goal"] = goal
+        ev["desired_attendees"] = desired_attendees
         ev["target_size"] = target_size
         ev["city"] = city
         ev["format"] = event_type
@@ -103,21 +143,26 @@ def run(brief: str, constraints: Optional[dict[str, Any]] = None,
         AGENT_NAME,
         run_id=run_id,
         input_summary=f"Raw event brief ({len(brief)} chars)",
-        output_summary=f"Normalized objective for a {target_size}-person {event_type} in {city or 'unspecified city'}.",
+        output_summary=(
+            f"Normalized {target_size}-person '{event_type}' in {city or 'unspecified city'}; "
+            f"goal_len={len(goal)}, desired_attendees_len={len(desired_attendees)}."
+        ),
         decisions_made=[
-            f"Inferred event_type='{event_type}' from brief keywords.",
-            f"Inferred target_size={target_size}.",
-            f"Inferred city='{city}'.",
+            f"event_type='{event_type}'.",
+            f"target_size={target_size}, city='{city}'.",
+            "Captured organizer triad: event type, desired attendees, overall goal (when extractable).",
         ],
         reasoning_summary=(
-            "Used keyword matching over the brief to infer event size, city, and event type. "
-            "Goal sentence is the first sentence containing 'goal' or the longest sentence as fallback."
+            "intent_extractor supplies event type, desired attendees, and overall goal when "
+            "ANTHROPIC_API_KEY is set or when the brief uses labeled sections; size/city still "
+            "use constraints, intent fields, and regex fallbacks on the full brief."
         ),
         confidence="medium",
         files_read=[],
         files_written=[],
         next_actions=["Run audience_agent to define ICP and avoid personas."],
         event_state=event_state,
+        persist_to_disk=persist_visibility,
     )
 
     return objective

@@ -1,141 +1,60 @@
 """Audience Intelligence Agent.
 
-Produces ICP personas, avoid personas, approval criteria, data-to-collect, and
-sourcing channels. Rule-based MVP keyed off the inferred event_type and goal
-keywords. Designed so the scoring rubric it emits is consumed unchanged by
-packages/scoring/attendee_fit.py.
+Calls the LLM-powered audience designer to derive ICP personas, avoid personas,
+scoring rubric, target room mix, approval criteria, and sourcing channels —
+all tailored to the specific event proposal. No hardcoded theme libraries.
+
+If the LLM is unavailable (no API key / no SDK), falls back to a minimal
+generic library. The fallback is intentionally not theme-specific.
 """
 from __future__ import annotations
 
 from typing import Any, Optional
 
+from packages.enrichment.audience_designer import design_audience
 from packages.shared.visibility import create_run_id, log_agent_run
 
 
 AGENT_NAME = "audience_agent"
 
 
-# Theme-keyed persona libraries. Order matters: higher-weight personas first.
-_AI_BUILDER_PERSONAS = [
-    {
-        "name": "ai_agent_founder",
-        "description": "Founders building AI agent products or agent infrastructure.",
-        "weight": 10,
-        "signals": ["founder", "ceo", "co-founder", "cofounder"],
-    },
-    {
-        "name": "ai_infra_builder",
-        "description": "Engineers building AI infra, devtools, or agent frameworks.",
-        "weight": 9,
-        "signals": ["infra", "platform", "devtools", "framework", "ai engineer",
-                    "staff engineer", "ml engineer", "principal engineer"],
-    },
-    {
-        "name": "technical_operator",
-        "description": "Technical PMs, applied AI leads, or hands-on operators shipping AI products.",
-        "weight": 7,
-        "signals": ["applied ai", "ml lead", "head of ai", "head of ml",
-                    "technical pm", "product manager", "applied scientist"],
-    },
-    {
-        "name": "community_connector",
-        "description": "High-signal community organizers, prolific writers, or hub people.",
-        "weight": 6,
-        "signals": ["community", "organizer", "writer", "researcher", "scout", "podcast"],
-    },
-    {
-        "name": "investor_high_signal",
-        "description": "Investors only if they materially improve room quality (partners at top funds, ex-operators).",
-        "weight": 4,
-        "signals": ["partner", "principal", "general partner", "gp", "venture"],
-    },
-]
-
-_AI_BUILDER_AVOID = [
-    {
-        "name": "generic_networker",
-        "description": "Attending purely to network with no clear connection to the theme.",
-        "penalty": 15,
-        "signals": ["bd", "business development", "sales rep"],
-    },
-    {
-        "name": "sales_only",
-        "description": "Sales-only attendees with no technical or product context.",
-        "penalty": 12,
-        "signals": ["account executive", "sdr", "ae", "enterprise sales"],
-    },
-    {
-        "name": "low_context",
-        "description": "Attendees with no clear connection to AI/agent infra theme.",
-        "penalty": 10,
-        "signals": [],
-    },
-    {
-        "name": "free_food_only",
-        "description": "Showing up for the perks rather than the conversation.",
-        "penalty": 8,
-        "signals": [],
-    },
-]
-
-
-def _select_personas(event_type: str, goal: str) -> tuple[list[dict], list[dict]]:
-    text = f"{event_type} {goal}".lower()
-    if any(k in text for k in ["ai", "agent", "llm", "infra", "builder"]):
-        return _AI_BUILDER_PERSONAS, _AI_BUILDER_AVOID
-    # default fallback uses the same library
-    return _AI_BUILDER_PERSONAS, _AI_BUILDER_AVOID
+def _compose_brief_for_audience(objective: dict[str, Any], event_brief: str) -> str:
+    """Prepend explicit organizer triad so audience_designer weights ICPs correctly."""
+    chunks: list[str] = []
+    et = (objective.get("event_type") or objective.get("format") or "").strip()
+    if et:
+        chunks.append(f"## Event type\n{et}")
+    want = (objective.get("desired_attendees") or "").strip()
+    if want:
+        chunks.append(f"## Who we want in the room\n{want}")
+    goal = (objective.get("goal") or "").strip()
+    if goal:
+        chunks.append(f"## Overall goal\n{goal}")
+    body = (event_brief or "").strip()
+    if not chunks:
+        return body
+    return "\n\n".join(chunks) + "\n\n---\n\n## Full organizer message\n" + body
 
 
 def run(objective: dict[str, Any],
-        event_state: Optional[dict[str, Any]] = None) -> dict[str, Any]:
+        event_state: Optional[dict[str, Any]] = None,
+        event_brief: str = "",
+        *,
+        persist_visibility: bool = True) -> dict[str, Any]:
     run_id = create_run_id(AGENT_NAME)
     event_type = objective.get("event_type", "")
-    goal = objective.get("goal", "")
     city = objective.get("city", "")
 
-    icp, avoid = _select_personas(event_type, goal)
+    effective_brief = _compose_brief_for_audience(objective, event_brief)
+    audience, designer_telemetry = design_audience(effective_brief)
 
-    approval_criteria = [
-        "Clear connection to the event theme (AI / agent infra / builders).",
-        "Currently building, leading, or deeply operating in a relevant role.",
-        "Likely to contribute to the room (not just consume).",
-        "Not flagged as an avoid persona.",
-    ]
-
-    data_to_collect = [
-        "name", "company", "role", "linkedin_url", "email",
-        "github_username", "twitter_handle",
-        "what they're currently building", "why they want to attend",
-        "introductions they're hoping to make",
-    ]
-
-    sourcing_channels = [
-        {"channel": "Luma attendee lists from similar events", "priority": "high"},
-        {"channel": "Founder/builder Twitter (X) lists", "priority": "high"},
-        {"channel": "GitHub contributors to relevant agent/infra repos", "priority": "high"},
-        {"channel": "Personal/team networks (warm intros)", "priority": "high"},
-        {"channel": "AI infra Slack/Discord communities", "priority": "medium"},
-        {"channel": "YC and top-fund portfolio lists (relevant tracks only)", "priority": "medium"},
-    ]
-
-    scoring_rubric = {
-        "max_score": 100,
-        "persona_weights": {p["name"]: p["weight"] * 8 for p in icp},  # base contribution
-        "avoid_penalties": {p["name"]: p["penalty"] for p in avoid},
-        "bonuses": {
-            "city_match": 10,
-            "founder_or_lead_signal": 8,
-            "github_or_writing_signal": 6,
-            "warm_intro": 6,
-        },
-        "thresholds": {
-            "high": 75,
-            "medium": 55,
-            "low": 35,
-        },
-        "notes": "Rule-based and explainable. See packages/scoring/attendee_fit.py.",
-    }
+    icp = audience.get("audience_icp", [])
+    avoid = audience.get("avoid_personas", [])
+    scoring_rubric = audience.get("scoring_rubric", {})
+    target_mix = audience.get("target_mix", {})
+    approval_criteria = audience.get("approval_criteria", [])
+    data_to_collect = audience.get("data_to_collect", [])
+    sourcing_channels = audience.get("sourcing_channels", [])
 
     out = {
         "audience_icp": icp,
@@ -144,6 +63,7 @@ def run(objective: dict[str, Any],
         "data_to_collect": data_to_collect,
         "sourcing_channels": sourcing_channels,
         "scoring_rubric": scoring_rubric,
+        "target_mix": target_mix,
     }
 
     if event_state is not None:
@@ -151,27 +71,40 @@ def run(objective: dict[str, Any],
         intel["audience_icp"] = icp
         intel["avoid_personas"] = avoid
         intel["scoring_rubric"] = scoring_rubric
+        # stash target mix here so room_balance_agent picks it up later
+        rb = intel.setdefault("room_balance", {})
+        rb["target_mix"] = target_mix
         intel.setdefault("notes", []).append(
-            f"Approval criteria: {len(approval_criteria)} items. Sourcing channels: {len(sourcing_channels)}."
+            f"Audience designer status: {designer_telemetry.get('status')}. "
+            f"Personas: {len(icp)}; avoid: {len(avoid)}."
         )
 
     log_agent_run(
         AGENT_NAME,
         run_id=run_id,
-        input_summary=f"Objective for '{event_type}' in {city or 'unspecified city'}.",
-        output_summary=f"Defined {len(icp)} ICP personas and {len(avoid)} avoid personas; emitted scoring rubric.",
+        input_summary=(
+            f"Objective for '{event_type}' in {city or 'unspecified city'}; "
+            f"effective brief len={len(effective_brief)}."
+        ),
+        output_summary=(
+            f"Audience designer status={designer_telemetry.get('status')}; "
+            f"defined {len(icp)} ICP personas, {len(avoid)} avoid personas; "
+            f"target_mix has {len(target_mix)} entries."
+        ),
         decisions_made=[
-            f"Selected AI-builder persona library based on goal/event_type keywords.",
-            f"Set high-fit threshold to {scoring_rubric['thresholds']['high']}.",
+            f"Designer mode: {designer_telemetry.get('status')}.",
+            f"ICP personas: {[p.get('name') for p in icp]}.",
+            f"High-fit threshold: {scoring_rubric.get('thresholds', {}).get('high', 75)}.",
         ],
         reasoning_summary=(
-            "Personas are weighted by likely contribution to room quality. Avoid personas reflect "
-            "the highest-frequency negative signals at curated AI events: generic networkers and "
-            "sales-only attendees. The rubric is rule-based so scores are auditable."
+            "Audience design uses an organizer triad when present (event type, who belongs "
+            "in the room, overall goal) prepended to the full brief, then one LLM pass — "
+            "no hardcoded persona libraries. Rubric is rule-based downstream for auditability."
         ),
-        confidence="medium",
-        next_actions=["Run sourcing_agent to define queries and ingest seed CSV."],
+        confidence="high" if designer_telemetry.get("status") == "ok" else "low",
+        next_actions=["Run sourcing_agent to define queries and (optionally) curate via web search."],
         event_state=event_state,
+        persist_to_disk=persist_visibility,
     )
 
     return out

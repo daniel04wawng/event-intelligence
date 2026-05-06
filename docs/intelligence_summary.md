@@ -1,46 +1,55 @@
 # Event Intelligence Summary
 
-_Generated 2026-05-05T06:48:54.522458+00:00_
+_Generated 2026-05-06T04:24:40.610344+00:00_
 
-## 1. Event Objective
-- **Goal:** goal is to build brand and community around agent infrastructure.
-- **Format:** curated tech community event
-- **City:** SF
-- **Target size:** 100
+## 1. Organizer intent → structured objective
+- **Event type:** hackathon
+- **Who we want:** good hackers with great involvement in the community, experience working at Meta
+- **Overall goal:** bring together a small group of skilled crypto hackers to build or compete collaboratively
+- **City:** 
+- **Target size:** 5
 - **Success metrics:**
-  - 100 RSVPs
-  - 60-70 actual attendees
-  - 30+ high-fit attendees aligned with the theme
+  - 5 RSVPs
+  - 3-3 actual attendees
+  - 20+ high-fit attendees aligned with the theme
   - 10 meaningful post-event follow-ups
 
 ## 2. Target Audience (ICP)
-- **ai_agent_founder** (weight 10): Founders building AI agent products or agent infrastructure.
-- **ai_infra_builder** (weight 9): Engineers building AI infra, devtools, or agent frameworks.
-- **technical_operator** (weight 7): Technical PMs, applied AI leads, or hands-on operators shipping AI products.
-- **community_connector** (weight 6): High-signal community organizers, prolific writers, or hub people.
-- **investor_high_signal** (weight 4): Investors only if they materially improve room quality (partners at top funds, ex-operators).
+- **meta_crypto_engineer** (weight 10): A software engineer with direct Meta/Facebook experience who has since pivoted into crypto protocol or dApp development.
+- **protocol_hacker** (weight 9): A hands-on builder who has shipped or contributed to a crypto protocol, L1/L2, or DeFi primitive with verifiable open-source work.
+- **crypto_open_source_contributor** (weight 8): An active GitHub contributor to well-known crypto repositories with a track record of PRs merged into major ecosystems.
+- **zk_specialist** (weight 8): A developer deeply focused on zero-knowledge cryptography, building circuits, proving systems, or zkEVM components.
+- **community_lead_hacker** (weight 7): A well-connected individual who organizes or co-organizes crypto developer communities, ETHGlobal events, or protocol DAOs while remaining a practicing builder.
+- **defi_smart_contract_dev** (weight 7): A battle-tested smart contract developer who has deployed and audited DeFi protocols handling real funds.
+- **crypto_infra_engineer** (weight 6): An engineer specializing in blockchain infrastructure — nodes, indexers, RPC layers, or cross-chain bridges — with a systems programming background.
+- **hackathon_veteran_winner** (weight 6): A repeat hackathon participant with demonstrated prize wins or notable project launches originating from hack events.
 
 ## 3. Avoid Personas
-- **generic_networker** (penalty 15): Attending purely to network with no clear connection to the theme.
-- **sales_only** (penalty 12): Sales-only attendees with no technical or product context.
-- **low_context** (penalty 10): Attendees with no clear connection to AI/agent infra theme.
-- **free_food_only** (penalty 8): Showing up for the perks rather than the conversation.
+- **non_technical_crypto_marketer** (penalty 20): Community managers or marketers with no coding background dilute the builder-to-builder dynamic of a 5-person technical hackathon.
+- **investor_or_vc** (penalty 18): VCs or angels attending to scout rather than build reduce hacking output and shift room dynamics away from collaboration.
+- **blockchain_buzzword_generalist** (penalty 15): Individuals who claim broad crypto knowledge but lack verifiable technical output or specific protocol depth will slow a high-skill small group.
+- **purely_web2_engineer** (penalty 12): Skilled engineers with no crypto exposure would require onboarding time that is incompatible with a focused small-group crypto hackathon.
+- **nft_trader_hobbyist** (penalty 10): NFT collectors or traders without engineering skills add no technical value and misunderstand the collaborative build format.
 
 ## 4. Sourcing Strategy
 ### queries
-- AI agent founders building production agent systems based in SF
-- AI infra / devtools engineers shipping agent frameworks based in SF
-- Applied AI leads at Series A-C startups based in SF
-- Active GitHub contributors to popular agent / LLM tooling repos based in SF
+- AI agent founders building production agent systems
+- AI infra / devtools engineers shipping agent frameworks
+- Applied AI leads at Series A-C startups
+- Active GitHub contributors to popular agent / LLM tooling repos
 - High-signal community organizers in AI infra space
 
 ### sources
-- Luma attendee lists from similar events (priority: high)
-- Founder/builder Twitter (X) lists (priority: high)
-- GitHub contributors to relevant agent/infra repos (priority: high)
-- Personal/team networks (warm intros) (priority: high)
-- AI infra Slack/Discord communities (priority: medium)
-- YC and top-fund portfolio lists (relevant tracks only) (priority: medium)
+- Meta/Novi/Diem alumni networks on LinkedIn filtered by current crypto role (priority: high)
+- ETHGlobal alumni and finalist directories from recent hackathons (priority: high)
+- Protocol Guild membership list and contributor rosters (priority: high)
+- Ethereum Magicians forum and EIP authorship credits (priority: high)
+- GitHub search: contributors to major Ethereum/Solana/ZK repos with Meta employment history (priority: high)
+- Crypto Twitter/Farcaster accounts known for technical threads with Meta background mentions (priority: medium)
+- Devcon and ETHDenver speaker and workshop facilitator lists (priority: medium)
+- Warm intros from existing attendees or crypto VC technical networks (priority: medium)
+- ZK-focused Telegram and Discord communities (ZK Hack, Aztec Discord, StarkNet Discord) (priority: medium)
+- Alumni groups for Meta engineering orgs on LinkedIn (priority: low)
 
 ### prioritization_rules
 - Warm intros and known builders go to top of queue.
@@ -53,35 +62,25 @@ _Generated 2026-05-05T06:48:54.522458+00:00_
 - **Max score:** 100
 - **High threshold:** 75
 - **Medium threshold:** 55
-- **Notes:** Rule-based and explainable. See packages/scoring/attendee_fit.py.
+- **Notes:** Rubric heavily rewards the rare Meta-plus-crypto overlap and verifiable technical depth, with steep penalties for non-builders given the 5-person room has zero slack for mismatched attendees.
 
 ## 6. Top 10 Ranked Prospects
 | # | Name | Company | Role | Persona | Fit | Priority |
 |---|------|---------|------|---------|-----|----------|
-| 1 | Alex Chen | Loop AI | Founder & CEO | ai_agent_founder | 100 | high |
-| 2 | Priya Rao | VectorForge | Staff AI Infra Engineer | ai_infra_builder | 88 | high |
-| 3 | Chris Okafor | Forge Capital | Partner | ai_infra_builder | 82 | high |
-| 4 | Lina Park | Helios | Head of Platform | ai_infra_builder | 80 | high |
-| 5 | Jamie Liu | SignalLabs | Applied AI Lead | technical_operator | 74 | medium |
-| 6 | Devon Park | Independent | AI Researcher and Writer | community_connector | 66 | medium |
-| 7 | Tomas Reyes | SoloDev | Builder |  | 10 | needs_review |
-| 8 | Marcus Webb | DataPipe | Account Executive |  | 0 | needs_review |
-| 9 | Riya Shah | GrowthCo | SDR |  | 0 | needs_review |
-| 10 | Hana Sato | QuickBiz | Business Development |  | 0 | needs_review |
+| 1 | Avery Ching | Aptos Labs | Co-Founder & CEO | meta_crypto_engineer | 88 | high |
+| 2 | Evan Cheng | Mysten Labs | Co-Founder & CEO | meta_crypto_engineer | 88 | high |
+| 3 | George Danezis | Mysten Labs / UCL | Co-Founder & Chief Scientist | protocol_hacker | 80 | high |
+| 4 | Sam Blackshear | Mysten Labs | Co-Founder & CTO | crypto_open_source_contributor | 78 | high |
+| 5 | Kostas Kryptos Chalkias | Mysten Labs | Co-Founder & Chief Cryptographer | zk_specialist | 72 | medium |
+| 6 | Adeniyi Abiodun | Mysten Labs | Co-Founder & CPO | community_lead_hacker | 64 | medium |
+| 7 | Nassim Eddequiouaq | Bastion | Co-Founder & CEO | defi_smart_contract_dev | 64 | medium |
+| 8 | Riyaz Faizullabhoy | Bastion | Co-Founder & CTO | crypto_infra_engineer | 56 | medium |
 
 ## 7. Room Balance
-- **Summary:** Top 6 prospects: gaps in ai_agent_founder, ai_infra_builder; overrepresented: none.
-- **Persona breakdown:** {'ai_agent_founder': 1, 'ai_infra_builder': 3, 'technical_operator': 1, 'community_connector': 1}
+- **Summary:** Top 5 prospects: gaps in none; overrepresented: meta_crypto_engineer.
+- **Persona breakdown:** {'meta_crypto_engineer': 2, 'protocol_hacker': 1, 'crypto_open_source_contributor': 1, 'zk_specialist': 1}
 - **Gaps:**
-  - ai_agent_founder: current 1 / target 30 (deficit 29)
-  - ai_infra_builder: current 3 / target 25 (deficit 22)
-  - technical_operator: current 1 / target 20 (deficit 19)
-  - community_connector: current 1 / target 15 (deficit 14)
-  - investor_high_signal: current 0 / target 10 (deficit 10)
 - **Recommendations:**
-  - Source from YC W24/S24 AI agent batch and recent agent-startup launch posts.
-  - Source from GitHub contributors to popular agent/LLM tooling repos and AI infra Slacks.
-  - Source from applied-AI / ML lead roles at Series A-C startups via warm intros.
 
 ## 8. Open Questions
 - Is the event public or invite-only?

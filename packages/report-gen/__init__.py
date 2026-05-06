@@ -1,9 +1,5 @@
 """
-LLM-powered report generation.
-Takes structured scoring output and produces sponsor-ready briefs.
+Reserved for LLM-generated artifacts (sponsor briefs, conversion summaries).
 
-Outputs:
-- SponsorBrief (PDF-ready markdown)
-- ConversionReport (post-event triage summary)
-- OutreachDrafts (personalized follow-up messages per attendee)
+Nothing implemented yet—add modules here when you need a dedicated report path.
 """
