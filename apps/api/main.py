@@ -15,9 +15,10 @@ app.add_middleware(
 async def health():
     return {"status": "ok"}
 
-# Route registration (uncomment as you build)
-# from apps.api.routes import events, sponsors, attendees, reports
-# app.include_router(events.router, prefix="/events")
-# app.include_router(sponsors.router, prefix="/sponsors")
-# app.include_router(attendees.router, prefix="/attendees")
-# app.include_router(reports.router, prefix="/reports")
+# Route registration
+from apps.api.routes import events, sponsors, attendees, reports, pipeline
+app.include_router(events.router, prefix="/events")
+app.include_router(sponsors.router, prefix="/sponsors")
+app.include_router(attendees.router, prefix="/attendees")
+app.include_router(reports.router, prefix="/reports")
+app.include_router(pipeline.router)
