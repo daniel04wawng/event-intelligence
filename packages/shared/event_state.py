@@ -56,8 +56,10 @@ def empty_person() -> dict[str, Any]:
 
 @dataclass
 class EventInfo:
+    # goal = overall success intent; format = event kind; desired_attendees = who belongs in the room
     name: str = ""
     goal: str = ""
+    desired_attendees: str = ""
     city: str = ""
     date: str = ""
     target_size: int = 100

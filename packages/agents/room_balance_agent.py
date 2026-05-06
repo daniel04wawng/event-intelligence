@@ -14,13 +14,25 @@ AGENT_NAME = "room_balance_agent"
 
 
 # Target percentages for the AI builder event archetype.
-DEFAULT_TARGET_MIX = {
-    "ai_agent_founder": 0.30,
-    "ai_infra_builder": 0.25,
-    "technical_operator": 0.20,
-    "community_connector": 0.15,
-    "investor_high_signal": 0.10,
-}
+def pick_target_mix(event_state: dict | None) -> dict[str, float]:
+    """Pick target mix from the LLM-designed audience stored in event_state.
+
+    Falls back to evenly-distributed weights across the ICP personas if the
+    designer didn't supply one.
+    """
+    if not event_state:
+        return {}
+    intel = event_state.get("intelligence", {}) or {}
+    rb = intel.get("room_balance", {}) or {}
+    mix = rb.get("target_mix") or {}
+    if mix:
+        return mix
+    # fallback: even split across the ICP personas
+    icp = intel.get("audience_icp", []) or []
+    if not icp:
+        return {}
+    share = 1.0 / len(icp)
+    return {p.get("name", f"persona_{i}"): share for i, p in enumerate(icp)}
 
 
 def _persona_of(person: dict[str, Any]) -> str:
@@ -40,7 +52,7 @@ def run(ranked_prospects: list[dict[str, Any]],
         target_size: int = 100,
         event_state: Optional[dict[str, Any]] = None) -> dict[str, Any]:
     run_id = create_run_id(AGENT_NAME)
-    target_mix = target_mix or DEFAULT_TARGET_MIX
+    target_mix = target_mix or pick_target_mix(event_state)
 
     # Consider only the top target_size prospects as the "current room".
     top = [p for p in ranked_prospects if p.get("priority") != "needs_review"][:target_size]

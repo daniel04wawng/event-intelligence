@@ -55,7 +55,9 @@ def _ingest_seed(seed_path: Optional[str | Path]) -> list[dict[str, Any]]:
 def run(objective: dict[str, Any],
         audience: dict[str, Any],
         seed_csv_path: Optional[str | Path] = None,
-        event_state: Optional[dict[str, Any]] = None) -> dict[str, Any]:
+        event_state: Optional[dict[str, Any]] = None,
+        event_brief: str = "",
+        use_llm_curator: bool = True) -> dict[str, Any]:
     run_id = create_run_id(AGENT_NAME)
 
     queries = _build_queries(objective, audience)
@@ -72,6 +74,20 @@ def run(objective: dict[str, Any],
 
     prospects = _ingest_seed(seed_csv_path)
     files_read = [str(seed_csv_path)] if seed_csv_path and Path(seed_csv_path).exists() else []
+    curator_telemetry: dict[str, Any] = {"status": "not_invoked"}
+
+    # If no seed CSV provided and curator is enabled, call the LLM curator
+    # to source real candidates online. Target count comes from the brief.
+    if not prospects and use_llm_curator and event_brief:
+        from packages.enrichment.llm_curator import curate as _curate
+        target_count = int(objective.get("target_size") or 50)
+        curated, curator_telemetry = _curate(
+            event_brief=event_brief,
+            target_count=target_count,
+            audience_icp=audience.get("audience_icp", []),
+            avoid_personas=audience.get("avoid_personas", []),
+        )
+        prospects.extend(curated)
 
     if event_state is not None:
         intel = event_state.setdefault("intelligence", {})
@@ -86,19 +102,22 @@ def run(objective: dict[str, Any],
     log_agent_run(
         AGENT_NAME,
         run_id=run_id,
-        input_summary=f"Objective + audience ICP. Seed CSV: {bool(prospects)} ({len(prospects)} rows).",
+        input_summary=f"Objective + audience ICP. Seed CSV: {bool(seed_csv_path)}. Curator: {curator_telemetry.get('status')}.",
         output_summary=(
-            f"Generated {len(queries)} sourcing queries, "
-            f"normalized {len(prospects)} prospects from seed CSV."
+            f"Generated {len(queries)} sourcing queries; "
+            f"sourced {len(prospects)} prospects "
+            f"(curator: {curator_telemetry.get('status')}, target: {objective.get('target_size')})."
         ),
         decisions_made=[
             f"Built {len(queries)} sourcing queries weighted to in-theme builders.",
             "Capped per-company attendance at ~3 to preserve room diversity.",
+            f"Curator status: {curator_telemetry.get('status')}.",
         ],
         reasoning_summary=(
-            "MVP avoids live scraping; instead produces explicit queries and channels so a human "
-            "(or the Agentic Ops branch) can run sourcing. Normalizing the seed CSV early makes "
-            "downstream scoring deterministic."
+            "Sourcing first calls the LLM curator (web-search-enabled) to find real candidates "
+            "matching the ICP, sized against target_size from the brief. The rule-based scorer "
+            "then ranks them. If curator is unavailable (no API key / no SDK), falls back to "
+            "the optional seed CSV. Either way, downstream scoring is deterministic."
         ),
         confidence="medium" if prospects else "low",
         files_read=files_read,

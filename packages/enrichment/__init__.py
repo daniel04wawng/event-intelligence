@@ -1,10 +1,7 @@
 """
-Profile enrichment from public data sources.
-Normalizes profiles into a common schema before scoring.
+LLM-driven enrichment for events.
 
-Sources:
-- LinkedIn (via Proxycurl or CSV export)
-- GitHub API
-- Twitter/X API
-- Organizer-provided CRM data
+Current modules:
+- `audience_designer` — derive ICP, rubric, and room mix from the brief
+- `llm_curator` — web-search-backed prospect discovery
 """

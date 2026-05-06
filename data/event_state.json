@@ -1,129 +1,212 @@
 {
   "event": {
-    "name": "AI Builder Event MVP",
-    "goal": "goal is to build brand and community around agent infrastructure.",
-    "city": "SF",
+    "name": "hackathon",
+    "goal": "bring together a small group of skilled crypto hackers to build or compete collaboratively",
+    "desired_attendees": "good hackers with great involvement in the community, experience working at Meta",
+    "city": "",
     "date": "",
-    "target_size": 100,
-    "format": "curated tech community event",
+    "target_size": 5,
+    "format": "hackathon",
     "success_metrics": [
-      "100 RSVPs",
-      "60-70 actual attendees",
-      "30+ high-fit attendees aligned with the theme",
+      "5 RSVPs",
+      "3-3 actual attendees",
+      "20+ high-fit attendees aligned with the theme",
       "10 meaningful post-event follow-ups"
     ]
   },
   "intelligence": {
     "audience_icp": [
       {
-        "name": "ai_agent_founder",
-        "description": "Founders building AI agent products or agent infrastructure.",
+        "name": "meta_crypto_engineer",
+        "description": "A software engineer with direct Meta/Facebook experience who has since pivoted into crypto protocol or dApp development.",
         "weight": 10,
         "signals": [
-          "founder",
-          "ceo",
-          "co-founder",
-          "cofounder"
+          "meta",
+          "facebook",
+          "novi",
+          "diem",
+          "libra",
+          "move language",
+          "whatsapp pay"
         ]
       },
       {
-        "name": "ai_infra_builder",
-        "description": "Engineers building AI infra, devtools, or agent frameworks.",
+        "name": "protocol_hacker",
+        "description": "A hands-on builder who has shipped or contributed to a crypto protocol, L1/L2, or DeFi primitive with verifiable open-source work.",
         "weight": 9,
         "signals": [
-          "infra",
-          "platform",
-          "devtools",
-          "framework",
-          "ai engineer",
-          "staff engineer",
-          "ml engineer",
-          "principal engineer"
+          "protocol",
+          "solidity",
+          "rust evm",
+          "l2",
+          "rollup",
+          "consensus",
+          "validator",
+          "eip author"
         ]
       },
       {
-        "name": "technical_operator",
-        "description": "Technical PMs, applied AI leads, or hands-on operators shipping AI products.",
+        "name": "crypto_open_source_contributor",
+        "description": "An active GitHub contributor to well-known crypto repositories with a track record of PRs merged into major ecosystems.",
+        "weight": 8,
+        "signals": [
+          "ethereum core",
+          "bitcoin core",
+          "cosmos sdk",
+          "substrate",
+          "foundry",
+          "hardhat contributor",
+          "open source maintainer"
+        ]
+      },
+      {
+        "name": "zk_specialist",
+        "description": "A developer deeply focused on zero-knowledge cryptography, building circuits, proving systems, or zkEVM components.",
+        "weight": 8,
+        "signals": [
+          "zk",
+          "zero knowledge",
+          "snark",
+          "stark",
+          "circom",
+          "halo2",
+          "plonk",
+          "zkvm",
+          "zkp"
+        ]
+      },
+      {
+        "name": "community_lead_hacker",
+        "description": "A well-connected individual who organizes or co-organizes crypto developer communities, ETHGlobal events, or protocol DAOs while remaining a practicing builder.",
         "weight": 7,
         "signals": [
-          "applied ai",
-          "ml lead",
-          "head of ai",
-          "head of ml",
-          "technical pm",
-          "product manager",
-          "applied scientist"
+          "ethglobal",
+          "dao contributor",
+          "devrel",
+          "protocol guild",
+          "ecosystem lead",
+          "community hacker",
+          "buildathon organizer"
         ]
       },
       {
-        "name": "community_connector",
-        "description": "High-signal community organizers, prolific writers, or hub people.",
+        "name": "defi_smart_contract_dev",
+        "description": "A battle-tested smart contract developer who has deployed and audited DeFi protocols handling real funds.",
+        "weight": 7,
+        "signals": [
+          "defi",
+          "smart contract",
+          "amm",
+          "lending protocol",
+          "yield",
+          "solidity audit",
+          "on-chain",
+          "uniswap fork"
+        ]
+      },
+      {
+        "name": "crypto_infra_engineer",
+        "description": "An engineer specializing in blockchain infrastructure \u2014 nodes, indexers, RPC layers, or cross-chain bridges \u2014 with a systems programming background.",
         "weight": 6,
         "signals": [
-          "community",
-          "organizer",
-          "writer",
-          "researcher",
-          "scout",
-          "podcast"
+          "node operator",
+          "indexer",
+          "subgraph",
+          "bridge infra",
+          "rpc",
+          "p2p networking",
+          "libp2p",
+          "devops blockchain"
         ]
       },
       {
-        "name": "investor_high_signal",
-        "description": "Investors only if they materially improve room quality (partners at top funds, ex-operators).",
-        "weight": 4,
+        "name": "hackathon_veteran_winner",
+        "description": "A repeat hackathon participant with demonstrated prize wins or notable project launches originating from hack events.",
+        "weight": 6,
         "signals": [
-          "partner",
-          "principal",
-          "general partner",
-          "gp",
-          "venture"
+          "hackathon winner",
+          "ethglobal finalist",
+          "prize",
+          "hack finalist",
+          "best use",
+          "bounty winner",
+          "shipped at hack"
         ]
       }
     ],
     "avoid_personas": [
       {
-        "name": "generic_networker",
-        "description": "Attending purely to network with no clear connection to the theme.",
+        "name": "non_technical_crypto_marketer",
+        "description": "Community managers or marketers with no coding background dilute the builder-to-builder dynamic of a 5-person technical hackathon.",
+        "penalty": 20,
+        "signals": [
+          "community manager",
+          "growth hacker",
+          "crypto marketing",
+          "brand ambassador",
+          "nft influencer",
+          "twitter kol"
+        ]
+      },
+      {
+        "name": "investor_or_vc",
+        "description": "VCs or angels attending to scout rather than build reduce hacking output and shift room dynamics away from collaboration.",
+        "penalty": 18,
+        "signals": [
+          "venture capital",
+          "angel investor",
+          "vc partner",
+          "fund manager",
+          "portfolio scout",
+          "deal flow"
+        ]
+      },
+      {
+        "name": "blockchain_buzzword_generalist",
+        "description": "Individuals who claim broad crypto knowledge but lack verifiable technical output or specific protocol depth will slow a high-skill small group.",
         "penalty": 15,
         "signals": [
-          "bd",
-          "business development",
-          "sales rep"
+          "web3 evangelist",
+          "blockchain consultant",
+          "crypto advisor",
+          "thought leader",
+          "speaker only",
+          "no github"
         ]
       },
       {
-        "name": "sales_only",
-        "description": "Sales-only attendees with no technical or product context.",
+        "name": "purely_web2_engineer",
+        "description": "Skilled engineers with no crypto exposure would require onboarding time that is incompatible with a focused small-group crypto hackathon.",
         "penalty": 12,
         "signals": [
-          "account executive",
-          "sdr",
-          "ae",
-          "enterprise sales"
+          "no crypto experience",
+          "first blockchain project",
+          "learning solidity",
+          "web2 only",
+          "no on-chain"
         ]
       },
       {
-        "name": "low_context",
-        "description": "Attendees with no clear connection to AI/agent infra theme.",
+        "name": "nft_trader_hobbyist",
+        "description": "NFT collectors or traders without engineering skills add no technical value and misunderstand the collaborative build format.",
         "penalty": 10,
-        "signals": []
-      },
-      {
-        "name": "free_food_only",
-        "description": "Showing up for the perks rather than the conversation.",
-        "penalty": 8,
-        "signals": []
+        "signals": [
+          "nft collector",
+          "jpeg trader",
+          "opensea seller",
+          "pfp project",
+          "nft flipper"
+        ]
       }
     ],
     "sourcing_strategy": [
       {
         "type": "queries",
         "items": [
-          "AI agent founders building production agent systems based in SF",
-          "AI infra / devtools engineers shipping agent frameworks based in SF",
-          "Applied AI leads at Series A-C startups based in SF",
-          "Active GitHub contributors to popular agent / LLM tooling repos based in SF",
+          "AI agent founders building production agent systems",
+          "AI infra / devtools engineers shipping agent frameworks",
+          "Applied AI leads at Series A-C startups",
+          "Active GitHub contributors to popular agent / LLM tooling repos",
           "High-signal community organizers in AI infra space"
         ]
       },
@@ -131,28 +214,44 @@
         "type": "sources",
         "items": [
           {
-            "channel": "Luma attendee lists from similar events",
+            "channel": "Meta/Novi/Diem alumni networks on LinkedIn filtered by current crypto role",
             "priority": "high"
           },
           {
-            "channel": "Founder/builder Twitter (X) lists",
+            "channel": "ETHGlobal alumni and finalist directories from recent hackathons",
             "priority": "high"
           },
           {
-            "channel": "GitHub contributors to relevant agent/infra repos",
+            "channel": "Protocol Guild membership list and contributor rosters",
             "priority": "high"
           },
           {
-            "channel": "Personal/team networks (warm intros)",
+            "channel": "Ethereum Magicians forum and EIP authorship credits",
             "priority": "high"
           },
           {
-            "channel": "AI infra Slack/Discord communities",
+            "channel": "GitHub search: contributors to major Ethereum/Solana/ZK repos with Meta employment history",
+            "priority": "high"
+          },
+          {
+            "channel": "Crypto Twitter/Farcaster accounts known for technical threads with Meta background mentions",
             "priority": "medium"
           },
           {
-            "channel": "YC and top-fund portfolio lists (relevant tracks only)",
+            "channel": "Devcon and ETHDenver speaker and workshop facilitator lists",
             "priority": "medium"
+          },
+          {
+            "channel": "Warm intros from existing attendees or crypto VC technical networks",
+            "priority": "medium"
+          },
+          {
+            "channel": "ZK-focused Telegram and Discord communities (ZK Hack, Aztec Discord, StarkNet Discord)",
+            "priority": "medium"
+          },
+          {
+            "channel": "Alumni groups for Meta engineering orgs on LinkedIn",
+            "priority": "low"
           }
         ]
       },
@@ -170,17 +269,21 @@
     "scoring_rubric": {
       "max_score": 100,
       "persona_weights": {
-        "ai_agent_founder": 80,
-        "ai_infra_builder": 72,
-        "technical_operator": 56,
-        "community_connector": 48,
-        "investor_high_signal": 32
+        "meta_crypto_engineer": 80,
+        "protocol_hacker": 72,
+        "crypto_open_source_contributor": 64,
+        "zk_specialist": 64,
+        "community_lead_hacker": 56,
+        "defi_smart_contract_dev": 56,
+        "crypto_infra_engineer": 48,
+        "hackathon_veteran_winner": 48
       },
       "avoid_penalties": {
-        "generic_networker": 15,
-        "sales_only": 12,
-        "low_context": 10,
-        "free_food_only": 8
+        "non_technical_crypto_marketer": 20,
+        "investor_or_vc": 18,
+        "blockchain_buzzword_generalist": 15,
+        "purely_web2_engineer": 12,
+        "nft_trader_hobbyist": 10
       },
       "bonuses": {
         "city_match": 10,
@@ -193,437 +296,339 @@
         "medium": 55,
         "low": 35
       },
-      "notes": "Rule-based and explainable. See packages/scoring/attendee_fit.py."
+      "notes": "Rubric heavily rewards the rare Meta-plus-crypto overlap and verifiable technical depth, with steep penalties for non-builders given the 5-person room has zero slack for mismatched attendees."
     },
     "room_balance": {
-      "summary": "Top 6 prospects: gaps in ai_agent_founder, ai_infra_builder; overrepresented: none.",
+      "summary": "Top 5 prospects: gaps in none; overrepresented: meta_crypto_engineer.",
       "persona_breakdown": {
-        "ai_agent_founder": 1,
-        "ai_infra_builder": 3,
-        "technical_operator": 1,
-        "community_connector": 1
+        "meta_crypto_engineer": 2,
+        "protocol_hacker": 1,
+        "crypto_open_source_contributor": 1,
+        "zk_specialist": 1
       },
       "persona_pct": {
-        "ai_agent_founder": 0.167,
-        "ai_infra_builder": 0.5,
-        "technical_operator": 0.167,
-        "community_connector": 0.167
+        "meta_crypto_engineer": 0.4,
+        "protocol_hacker": 0.2,
+        "crypto_open_source_contributor": 0.2,
+        "zk_specialist": 0.2
       },
       "target_mix": {
-        "ai_agent_founder": 0.3,
-        "ai_infra_builder": 0.25,
-        "technical_operator": 0.2,
-        "community_connector": 0.15,
-        "investor_high_signal": 0.1
+        "meta_crypto_engineer": 0.25,
+        "protocol_hacker": 0.2,
+        "zk_specialist": 0.15,
+        "crypto_open_source_contributor": 0.15,
+        "community_lead_hacker": 0.1,
+        "defi_smart_contract_dev": 0.1,
+        "crypto_infra_engineer": 0.03,
+        "hackathon_veteran_winner": 0.02
       },
-      "gaps": [
+      "gaps": [],
+      "overrepresented": [
         {
-          "persona": "ai_agent_founder",
-          "current": 1,
-          "target": 30,
-          "deficit": 29
-        },
-        {
-          "persona": "ai_infra_builder",
-          "current": 3,
-          "target": 25,
-          "deficit": 22
-        },
-        {
-          "persona": "technical_operator",
-          "current": 1,
-          "target": 20,
-          "deficit": 19
-        },
-        {
-          "persona": "community_connector",
-          "current": 1,
-          "target": 15,
-          "deficit": 14
-        },
-        {
-          "persona": "investor_high_signal",
-          "current": 0,
-          "target": 10,
-          "deficit": 10
+          "persona": "meta_crypto_engineer",
+          "current": 2,
+          "target": 1,
+          "excess": 1
         }
       ],
-      "overrepresented": [],
-      "recommendations": [
-        "Source from YC W24/S24 AI agent batch and recent agent-startup launch posts.",
-        "Source from GitHub contributors to popular agent/LLM tooling repos and AI infra Slacks.",
-        "Source from applied-AI / ML lead roles at Series A-C startups via warm intros."
-      ],
-      "top_gap": {
-        "persona": "ai_agent_founder",
-        "current": 1,
-        "target": 30,
-        "deficit": 29
-      }
+      "recommendations": [],
+      "top_gap": null
     },
     "notes": [
-      "Approval criteria: 4 items. Sourcing channels: 6."
+      "Audience designer status: ok. Personas: 8; avoid: 5."
     ]
   },
   "people": {
     "prospects": [
       {
-        "name": "Alex Chen",
-        "company": "Loop AI",
-        "role": "Founder & CEO",
-        "linkedin_url": "https://linkedin.com/in/alexchen",
-        "email": "alex@loop.ai",
-        "source": "warm_intro",
-        "persona": "ai_agent_founder",
-        "why_relevant": "Matches ICP persona 'ai_agent_founder'. Score breakdown: persona_match:ai_agent_founder(+80), founder_or_lead_signal(+8), warm_intro(+6), city_match(+10).",
-        "fit_score": 100,
-        "priority": "high",
-        "outreach_angle": "",
-        "status": "not_contacted",
-        "tags": [
-          "ai_agent_founder"
-        ],
-        "notes": "Building AI agent platform; based in SF; warm intro from Sara"
-      },
-      {
-        "name": "Priya Rao",
-        "company": "VectorForge",
-        "role": "Staff AI Infra Engineer",
-        "linkedin_url": "https://linkedin.com/in/priyarao",
-        "email": "priya@vectorforge.io",
-        "source": "github",
-        "persona": "ai_infra_builder",
-        "why_relevant": "Matches ICP persona 'ai_infra_builder'. Score breakdown: persona_match:ai_infra_builder(+72), github_or_writing_signal(+6), city_match(+10).",
+        "name": "Avery Ching",
+        "company": "Aptos Labs",
+        "role": "Co-Founder & CEO",
+        "linkedin_url": "https://www.linkedin.com/in/averyching",
+        "email": "",
+        "source": "web_search: aptoslabs.com/team; mccormick.northwestern.edu; koreatimes.co.kr interview Oct 2025",
+        "persona": "meta_crypto_engineer",
+        "why_relevant": "Matches ICP persona 'meta_crypto_engineer'. Score breakdown: persona_match:meta_crypto_engineer(+80), founder_or_lead_signal(+8).",
         "fit_score": 88,
         "priority": "high",
         "outreach_angle": "",
         "status": "not_contacted",
         "tags": [
-          "ai_infra_builder"
+          "meta_crypto_engineer"
         ],
-        "notes": "Maintainer of popular open source agent framework; SF"
+        "notes": "Spent over a decade at Meta as tech lead of the crypto platform, leading all aspects of the Diem blockchain and Novi wallet infrastructure; co-founded Aptos Labs in 2021 to build a Move-based L1 blockchain, raising $400M+ and shipping mainnet in 2022. Deep distributed systems background with a PhD from Northwestern."
       },
       {
-        "name": "Marcus Webb",
-        "company": "DataPipe",
-        "role": "Account Executive",
-        "linkedin_url": "https://linkedin.com/in/marcuswebb",
-        "email": "marcus@datapipe.com",
-        "source": "cold_list",
-        "persona": "",
-        "why_relevant": "No clear ICP persona match from available fields. Flagged for avoid persona 'generic_networker'. Score breakdown: avoid_penalty:generic_networker(-15).",
-        "fit_score": 0,
-        "priority": "needs_review",
-        "outreach_angle": "",
-        "status": "not_contacted",
-        "tags": [
-          "avoid:generic_networker"
-        ],
-        "notes": "Enterprise sales rep; not technical"
-      },
-      {
-        "name": "Jamie Liu",
-        "company": "SignalLabs",
-        "role": "Applied AI Lead",
-        "linkedin_url": "https://linkedin.com/in/jamieliu",
-        "email": "jamie@signallabs.com",
-        "source": "luma",
-        "persona": "technical_operator",
-        "why_relevant": "Matches ICP persona 'technical_operator'. Score breakdown: persona_match:technical_operator(+56), founder_or_lead_signal(+8), city_match(+10).",
-        "fit_score": 74,
-        "priority": "medium",
-        "outreach_angle": "",
-        "status": "not_contacted",
-        "tags": [
-          "technical_operator"
-        ],
-        "notes": "Shipping LLM features at Series B startup; SF; writes regularly"
-      },
-      {
-        "name": "Devon Park",
-        "company": "Independent",
-        "role": "AI Researcher and Writer",
-        "linkedin_url": "https://linkedin.com/in/devonpark",
-        "email": "devon@example.com",
-        "source": "community",
-        "persona": "community_connector",
-        "why_relevant": "Matches ICP persona 'community_connector'. Score breakdown: persona_match:community_connector(+48), founder_or_lead_signal(+8), city_match(+10).",
-        "fit_score": 66,
-        "priority": "medium",
-        "outreach_angle": "",
-        "status": "not_contacted",
-        "tags": [
-          "community_connector"
-        ],
-        "notes": "Prolific writer on agent infra; community connector; SF"
-      },
-      {
-        "name": "Riya Shah",
-        "company": "GrowthCo",
-        "role": "SDR",
-        "linkedin_url": "https://linkedin.com/in/riyashah",
-        "email": "riya@growthco.com",
-        "source": "cold_list",
-        "persona": "",
-        "why_relevant": "No clear ICP persona match from available fields. Flagged for avoid persona 'sales_only'. Score breakdown: avoid_penalty:sales_only(-12).",
-        "fit_score": 0,
-        "priority": "needs_review",
-        "outreach_angle": "",
-        "status": "not_contacted",
-        "tags": [
-          "avoid:sales_only"
-        ],
-        "notes": "Sales development rep; no technical background"
-      },
-      {
-        "name": "Chris Okafor",
-        "company": "Forge Capital",
-        "role": "Partner",
-        "linkedin_url": "https://linkedin.com/in/chrisokafor",
-        "email": "chris@forgecap.com",
-        "source": "warm_intro",
-        "persona": "ai_infra_builder",
-        "why_relevant": "Matches ICP persona 'ai_infra_builder'. Score breakdown: persona_match:ai_infra_builder(+72), city_match(+10).",
-        "fit_score": 82,
+        "name": "Sam Blackshear",
+        "company": "Mysten Labs",
+        "role": "Co-Founder & CTO",
+        "linkedin_url": "https://www.linkedin.com/in/sam-blackshear-599b3965",
+        "email": "",
+        "source": "web_search: github.com/sblackshear; theblock.co profile; cointelegraph.com Move language feature Jan 2024",
+        "persona": "crypto_open_source_contributor",
+        "why_relevant": "Matches ICP persona 'crypto_open_source_contributor'. Score breakdown: persona_match:crypto_open_source_contributor(+64), founder_or_lead_signal(+8), github_or_writing_signal(+6).",
+        "fit_score": 78,
         "priority": "high",
         "outreach_angle": "",
         "status": "not_contacted",
         "tags": [
-          "ai_infra_builder"
+          "crypto_open_source_contributor"
         ],
-        "notes": "Investor partner; ex-operator at AI infra company; SF"
+        "notes": "Created the Move smart contract language at Meta (as Principal Engineer on the Libra/Diem platform), which now powers both Sui and Aptos; active open-source contributor on GitHub (sblackshear), architecting Sui's smart contract infrastructure and Walrus Protocol at Mysten Labs."
       },
       {
-        "name": "Lina Park",
-        "company": "Helios",
-        "role": "Head of Platform",
-        "linkedin_url": "https://linkedin.com/in/linapark",
-        "email": "lina@helios.dev",
-        "source": "github",
-        "persona": "ai_infra_builder",
-        "why_relevant": "Matches ICP persona 'ai_infra_builder'. Score breakdown: persona_match:ai_infra_builder(+72), founder_or_lead_signal(+8).",
+        "name": "Kostas Kryptos Chalkias",
+        "company": "Mysten Labs",
+        "role": "Co-Founder & Chief Cryptographer",
+        "linkedin_url": "https://www.linkedin.com/in/chalkiaskostas/",
+        "email": "",
+        "source": "web_search: iq.wiki/wiki/kostas-chalkias; esat.kuleuven.be speaker bio; blog.sui.io interview Jun 2023",
+        "persona": "zk_specialist",
+        "why_relevant": "Matches ICP persona 'zk_specialist'. Score breakdown: persona_match:zk_specialist(+64), founder_or_lead_signal(+8).",
+        "fit_score": 72,
+        "priority": "medium",
+        "outreach_angle": "",
+        "status": "not_contacted",
+        "tags": [
+          "zk_specialist"
+        ],
+        "notes": "Led Meta's cryptography team for the Diem/Libra project and WhatsApp security; main contributor to zkLogin OAuth crypto authentication, HashWires range proofs, and Winterfell (first open-source STARK prover); holds a PhD in identity-based cryptography and has 50+ scientific publications on zero-knowledge proofs and post-quantum signatures."
+      },
+      {
+        "name": "George Danezis",
+        "company": "Mysten Labs / UCL",
+        "role": "Co-Founder & Chief Scientist",
+        "linkedin_url": "",
+        "email": "",
+        "source": "web_search: en.wikipedia.org/wiki/George_Danezis; ucl.ac.uk homepage; iq.wiki/wiki/george-danezis",
+        "persona": "protocol_hacker",
+        "why_relevant": "Matches ICP persona 'protocol_hacker'. Score breakdown: persona_match:protocol_hacker(+72), founder_or_lead_signal(+8).",
         "fit_score": 80,
         "priority": "high",
         "outreach_angle": "",
         "status": "not_contacted",
         "tags": [
-          "ai_infra_builder"
+          "protocol_hacker"
         ],
-        "notes": "Leads platform/devtools team; ships agent tooling; NYC"
+        "notes": "Former Facebook Research Scientist (Novi/Diem team) who co-founded Chainspace (acquired by Facebook) before co-founding Mysten Labs; co-designed the Sui smart contract platform and the Narwhal/Tusk/Mysticeti DAG-based consensus protocols; Professor of Security & Privacy Engineering at UCL with 100+ peer-reviewed papers on Byzantine fault-tolerant systems and distributed ledger security."
       },
       {
-        "name": "Tomas Reyes",
-        "company": "SoloDev",
-        "role": "Builder",
-        "linkedin_url": "https://linkedin.com/in/tomasreyes",
-        "email": "tomas@example.com",
-        "source": "twitter",
-        "persona": "",
-        "why_relevant": "No clear ICP persona match from available fields. Score breakdown: city_match(+10).",
-        "fit_score": 10,
-        "priority": "needs_review",
-        "outreach_angle": "",
-        "status": "not_contacted",
-        "tags": [],
-        "notes": "Indie builder; ships AI side projects; SF"
-      },
-      {
-        "name": "Hana Sato",
-        "company": "QuickBiz",
-        "role": "Business Development",
-        "linkedin_url": "https://linkedin.com/in/hanasato",
-        "email": "hana@quickbiz.co",
-        "source": "cold_list",
-        "persona": "",
-        "why_relevant": "No clear ICP persona match from available fields. Flagged for avoid persona 'generic_networker'. Score breakdown: avoid_penalty:generic_networker(-15).",
-        "fit_score": 0,
-        "priority": "needs_review",
+        "name": "Evan Cheng",
+        "company": "Mysten Labs",
+        "role": "Co-Founder & CEO",
+        "linkedin_url": "https://www.linkedin.com/in/chengevan",
+        "email": "",
+        "source": "web_search: coindesk.com 'Architect of Sui's Object-Oriented Revolution' Dec 2024; blockworks.co speaker profile; iq.wiki/wiki/evan-cheng",
+        "persona": "meta_crypto_engineer",
+        "why_relevant": "Matches ICP persona 'meta_crypto_engineer'. Score breakdown: persona_match:meta_crypto_engineer(+80), founder_or_lead_signal(+8).",
+        "fit_score": 88,
+        "priority": "high",
         "outreach_angle": "",
         "status": "not_contacted",
         "tags": [
-          "avoid:generic_networker"
+          "meta_crypto_engineer"
         ],
-        "notes": "Generic networker; BD role; no clear AI connection"
+        "notes": "Led Novi Research & Development and served as Engineering Director of Calibra/Blockchain at Meta (Facebook), building the Move language and Diem platform; prior decade at Apple as a senior LLVM compiler engineer (2012 ACM Software System Award); co-founded Mysten Labs and shipped the Sui L1 blockchain to $1.5B+ TVL."
+      },
+      {
+        "name": "Adeniyi Abiodun",
+        "company": "Mysten Labs",
+        "role": "Co-Founder & CPO",
+        "linkedin_url": "https://www.linkedin.com/in/emmanuel-abiodun",
+        "email": "",
+        "source": "web_search: iq.wiki/wiki/adeniyi-abiodun; cryptoslate.com/people/adeniyi-abiodun; blog.sui.io interview",
+        "persona": "community_lead_hacker",
+        "why_relevant": "Matches ICP persona 'community_lead_hacker'. Score breakdown: persona_match:community_lead_hacker(+56), founder_or_lead_signal(+8).",
+        "fit_score": 64,
+        "priority": "medium",
+        "outreach_angle": "",
+        "status": "not_contacted",
+        "tags": [
+          "community_lead_hacker"
+        ],
+        "notes": "Established the Novi Crypto Platform team at Meta and led crypto infrastructure product development; co-founded one of the first large-scale Bitcoin mining companies (CloudHashing/PeerNova) and held blockchain product roles at Oracle and VMware before co-founding Mysten Labs; active community builder promoting Web3 developer adoption in Africa and globally."
+      },
+      {
+        "name": "Riyaz Faizullabhoy",
+        "company": "Bastion",
+        "role": "Co-Founder & CTO",
+        "linkedin_url": "",
+        "email": "",
+        "source": "web_search: techcrunch.com 'Former a16z execs launch Bastion' Sep 2023; cnbc.com Oct 2021; a16zcrypto.com announcement",
+        "persona": "crypto_infra_engineer",
+        "why_relevant": "Matches ICP persona 'crypto_infra_engineer'. Score breakdown: persona_match:crypto_infra_engineer(+48), founder_or_lead_signal(+8).",
+        "fit_score": 56,
+        "priority": "medium",
+        "outreach_angle": "",
+        "status": "not_contacted",
+        "tags": [
+          "crypto_infra_engineer"
+        ],
+        "notes": "Co-built the crypto custody infrastructure for Facebook's Novi wallet (formerly Calibra) as a senior security/blockchain infrastructure engineer; subsequently served as CTO of a16z Crypto advising portfolio protocols on security architecture; co-founded Bastion ($25M seed) to build web3 enterprise infrastructure\u2014deep background in key management, secure enclaves, and distributed custody systems."
+      },
+      {
+        "name": "Nassim Eddequiouaq",
+        "company": "Bastion",
+        "role": "Co-Founder & CEO",
+        "linkedin_url": "",
+        "email": "",
+        "source": "web_search: techcrunch.com 'Former a16z execs launch Bastion' Sep 2023; coindesk.com Oct 2021; a16zcrypto.com announcement",
+        "persona": "defi_smart_contract_dev",
+        "why_relevant": "Matches ICP persona 'defi_smart_contract_dev'. Score breakdown: persona_match:defi_smart_contract_dev(+56), founder_or_lead_signal(+8).",
+        "fit_score": 64,
+        "priority": "medium",
+        "outreach_angle": "",
+        "status": "not_contacted",
+        "tags": [
+          "defi_smart_contract_dev"
+        ],
+        "notes": "Co-created the crypto custody and smart contract infrastructure for Facebook's Novi digital wallet; served as CISO of a16z Crypto auditing and advising DeFi protocol security across the firm's portfolio; co-founded Bastion to build secure web3 infrastructure for enterprise brands, with deep expertise in blockchain security, key management, and smart contract auditing."
       }
     ],
     "ranked_prospects": [
       {
-        "name": "Alex Chen",
-        "company": "Loop AI",
-        "role": "Founder & CEO",
-        "linkedin_url": "https://linkedin.com/in/alexchen",
-        "email": "alex@loop.ai",
-        "source": "warm_intro",
-        "persona": "ai_agent_founder",
-        "why_relevant": "Matches ICP persona 'ai_agent_founder'. Score breakdown: persona_match:ai_agent_founder(+80), founder_or_lead_signal(+8), warm_intro(+6), city_match(+10).",
-        "fit_score": 100,
-        "priority": "high",
-        "outreach_angle": "",
-        "status": "not_contacted",
-        "tags": [
-          "ai_agent_founder"
-        ],
-        "notes": "Building AI agent platform; based in SF; warm intro from Sara"
-      },
-      {
-        "name": "Priya Rao",
-        "company": "VectorForge",
-        "role": "Staff AI Infra Engineer",
-        "linkedin_url": "https://linkedin.com/in/priyarao",
-        "email": "priya@vectorforge.io",
-        "source": "github",
-        "persona": "ai_infra_builder",
-        "why_relevant": "Matches ICP persona 'ai_infra_builder'. Score breakdown: persona_match:ai_infra_builder(+72), github_or_writing_signal(+6), city_match(+10).",
+        "name": "Avery Ching",
+        "company": "Aptos Labs",
+        "role": "Co-Founder & CEO",
+        "linkedin_url": "https://www.linkedin.com/in/averyching",
+        "email": "",
+        "source": "web_search: aptoslabs.com/team; mccormick.northwestern.edu; koreatimes.co.kr interview Oct 2025",
+        "persona": "meta_crypto_engineer",
+        "why_relevant": "Matches ICP persona 'meta_crypto_engineer'. Score breakdown: persona_match:meta_crypto_engineer(+80), founder_or_lead_signal(+8).",
         "fit_score": 88,
         "priority": "high",
         "outreach_angle": "",
         "status": "not_contacted",
         "tags": [
-          "ai_infra_builder"
+          "meta_crypto_engineer"
         ],
-        "notes": "Maintainer of popular open source agent framework; SF"
+        "notes": "Spent over a decade at Meta as tech lead of the crypto platform, leading all aspects of the Diem blockchain and Novi wallet infrastructure; co-founded Aptos Labs in 2021 to build a Move-based L1 blockchain, raising $400M+ and shipping mainnet in 2022. Deep distributed systems background with a PhD from Northwestern."
       },
       {
-        "name": "Chris Okafor",
-        "company": "Forge Capital",
-        "role": "Partner",
-        "linkedin_url": "https://linkedin.com/in/chrisokafor",
-        "email": "chris@forgecap.com",
-        "source": "warm_intro",
-        "persona": "ai_infra_builder",
-        "why_relevant": "Matches ICP persona 'ai_infra_builder'. Score breakdown: persona_match:ai_infra_builder(+72), city_match(+10).",
-        "fit_score": 82,
+        "name": "Evan Cheng",
+        "company": "Mysten Labs",
+        "role": "Co-Founder & CEO",
+        "linkedin_url": "https://www.linkedin.com/in/chengevan",
+        "email": "",
+        "source": "web_search: coindesk.com 'Architect of Sui's Object-Oriented Revolution' Dec 2024; blockworks.co speaker profile; iq.wiki/wiki/evan-cheng",
+        "persona": "meta_crypto_engineer",
+        "why_relevant": "Matches ICP persona 'meta_crypto_engineer'. Score breakdown: persona_match:meta_crypto_engineer(+80), founder_or_lead_signal(+8).",
+        "fit_score": 88,
         "priority": "high",
         "outreach_angle": "",
         "status": "not_contacted",
         "tags": [
-          "ai_infra_builder"
+          "meta_crypto_engineer"
         ],
-        "notes": "Investor partner; ex-operator at AI infra company; SF"
+        "notes": "Led Novi Research & Development and served as Engineering Director of Calibra/Blockchain at Meta (Facebook), building the Move language and Diem platform; prior decade at Apple as a senior LLVM compiler engineer (2012 ACM Software System Award); co-founded Mysten Labs and shipped the Sui L1 blockchain to $1.5B+ TVL."
       },
       {
-        "name": "Lina Park",
-        "company": "Helios",
-        "role": "Head of Platform",
-        "linkedin_url": "https://linkedin.com/in/linapark",
-        "email": "lina@helios.dev",
-        "source": "github",
-        "persona": "ai_infra_builder",
-        "why_relevant": "Matches ICP persona 'ai_infra_builder'. Score breakdown: persona_match:ai_infra_builder(+72), founder_or_lead_signal(+8).",
+        "name": "George Danezis",
+        "company": "Mysten Labs / UCL",
+        "role": "Co-Founder & Chief Scientist",
+        "linkedin_url": "",
+        "email": "",
+        "source": "web_search: en.wikipedia.org/wiki/George_Danezis; ucl.ac.uk homepage; iq.wiki/wiki/george-danezis",
+        "persona": "protocol_hacker",
+        "why_relevant": "Matches ICP persona 'protocol_hacker'. Score breakdown: persona_match:protocol_hacker(+72), founder_or_lead_signal(+8).",
         "fit_score": 80,
         "priority": "high",
         "outreach_angle": "",
         "status": "not_contacted",
         "tags": [
-          "ai_infra_builder"
+          "protocol_hacker"
         ],
-        "notes": "Leads platform/devtools team; ships agent tooling; NYC"
+        "notes": "Former Facebook Research Scientist (Novi/Diem team) who co-founded Chainspace (acquired by Facebook) before co-founding Mysten Labs; co-designed the Sui smart contract platform and the Narwhal/Tusk/Mysticeti DAG-based consensus protocols; Professor of Security & Privacy Engineering at UCL with 100+ peer-reviewed papers on Byzantine fault-tolerant systems and distributed ledger security."
       },
       {
-        "name": "Jamie Liu",
-        "company": "SignalLabs",
-        "role": "Applied AI Lead",
-        "linkedin_url": "https://linkedin.com/in/jamieliu",
-        "email": "jamie@signallabs.com",
-        "source": "luma",
-        "persona": "technical_operator",
-        "why_relevant": "Matches ICP persona 'technical_operator'. Score breakdown: persona_match:technical_operator(+56), founder_or_lead_signal(+8), city_match(+10).",
-        "fit_score": 74,
+        "name": "Sam Blackshear",
+        "company": "Mysten Labs",
+        "role": "Co-Founder & CTO",
+        "linkedin_url": "https://www.linkedin.com/in/sam-blackshear-599b3965",
+        "email": "",
+        "source": "web_search: github.com/sblackshear; theblock.co profile; cointelegraph.com Move language feature Jan 2024",
+        "persona": "crypto_open_source_contributor",
+        "why_relevant": "Matches ICP persona 'crypto_open_source_contributor'. Score breakdown: persona_match:crypto_open_source_contributor(+64), founder_or_lead_signal(+8), github_or_writing_signal(+6).",
+        "fit_score": 78,
+        "priority": "high",
+        "outreach_angle": "",
+        "status": "not_contacted",
+        "tags": [
+          "crypto_open_source_contributor"
+        ],
+        "notes": "Created the Move smart contract language at Meta (as Principal Engineer on the Libra/Diem platform), which now powers both Sui and Aptos; active open-source contributor on GitHub (sblackshear), architecting Sui's smart contract infrastructure and Walrus Protocol at Mysten Labs."
+      },
+      {
+        "name": "Kostas Kryptos Chalkias",
+        "company": "Mysten Labs",
+        "role": "Co-Founder & Chief Cryptographer",
+        "linkedin_url": "https://www.linkedin.com/in/chalkiaskostas/",
+        "email": "",
+        "source": "web_search: iq.wiki/wiki/kostas-chalkias; esat.kuleuven.be speaker bio; blog.sui.io interview Jun 2023",
+        "persona": "zk_specialist",
+        "why_relevant": "Matches ICP persona 'zk_specialist'. Score breakdown: persona_match:zk_specialist(+64), founder_or_lead_signal(+8).",
+        "fit_score": 72,
         "priority": "medium",
         "outreach_angle": "",
         "status": "not_contacted",
         "tags": [
-          "technical_operator"
+          "zk_specialist"
         ],
-        "notes": "Shipping LLM features at Series B startup; SF; writes regularly"
+        "notes": "Led Meta's cryptography team for the Diem/Libra project and WhatsApp security; main contributor to zkLogin OAuth crypto authentication, HashWires range proofs, and Winterfell (first open-source STARK prover); holds a PhD in identity-based cryptography and has 50+ scientific publications on zero-knowledge proofs and post-quantum signatures."
       },
       {
-        "name": "Devon Park",
-        "company": "Independent",
-        "role": "AI Researcher and Writer",
-        "linkedin_url": "https://linkedin.com/in/devonpark",
-        "email": "devon@example.com",
-        "source": "community",
-        "persona": "community_connector",
-        "why_relevant": "Matches ICP persona 'community_connector'. Score breakdown: persona_match:community_connector(+48), founder_or_lead_signal(+8), city_match(+10).",
-        "fit_score": 66,
+        "name": "Adeniyi Abiodun",
+        "company": "Mysten Labs",
+        "role": "Co-Founder & CPO",
+        "linkedin_url": "https://www.linkedin.com/in/emmanuel-abiodun",
+        "email": "",
+        "source": "web_search: iq.wiki/wiki/adeniyi-abiodun; cryptoslate.com/people/adeniyi-abiodun; blog.sui.io interview",
+        "persona": "community_lead_hacker",
+        "why_relevant": "Matches ICP persona 'community_lead_hacker'. Score breakdown: persona_match:community_lead_hacker(+56), founder_or_lead_signal(+8).",
+        "fit_score": 64,
         "priority": "medium",
         "outreach_angle": "",
         "status": "not_contacted",
         "tags": [
-          "community_connector"
+          "community_lead_hacker"
         ],
-        "notes": "Prolific writer on agent infra; community connector; SF"
+        "notes": "Established the Novi Crypto Platform team at Meta and led crypto infrastructure product development; co-founded one of the first large-scale Bitcoin mining companies (CloudHashing/PeerNova) and held blockchain product roles at Oracle and VMware before co-founding Mysten Labs; active community builder promoting Web3 developer adoption in Africa and globally."
       },
       {
-        "name": "Tomas Reyes",
-        "company": "SoloDev",
-        "role": "Builder",
-        "linkedin_url": "https://linkedin.com/in/tomasreyes",
-        "email": "tomas@example.com",
-        "source": "twitter",
-        "persona": "",
-        "why_relevant": "No clear ICP persona match from available fields. Score breakdown: city_match(+10).",
-        "fit_score": 10,
-        "priority": "needs_review",
-        "outreach_angle": "",
-        "status": "not_contacted",
-        "tags": [],
-        "notes": "Indie builder; ships AI side projects; SF"
-      },
-      {
-        "name": "Marcus Webb",
-        "company": "DataPipe",
-        "role": "Account Executive",
-        "linkedin_url": "https://linkedin.com/in/marcuswebb",
-        "email": "marcus@datapipe.com",
-        "source": "cold_list",
-        "persona": "",
-        "why_relevant": "No clear ICP persona match from available fields. Flagged for avoid persona 'generic_networker'. Score breakdown: avoid_penalty:generic_networker(-15).",
-        "fit_score": 0,
-        "priority": "needs_review",
+        "name": "Nassim Eddequiouaq",
+        "company": "Bastion",
+        "role": "Co-Founder & CEO",
+        "linkedin_url": "",
+        "email": "",
+        "source": "web_search: techcrunch.com 'Former a16z execs launch Bastion' Sep 2023; coindesk.com Oct 2021; a16zcrypto.com announcement",
+        "persona": "defi_smart_contract_dev",
+        "why_relevant": "Matches ICP persona 'defi_smart_contract_dev'. Score breakdown: persona_match:defi_smart_contract_dev(+56), founder_or_lead_signal(+8).",
+        "fit_score": 64,
+        "priority": "medium",
         "outreach_angle": "",
         "status": "not_contacted",
         "tags": [
-          "avoid:generic_networker"
+          "defi_smart_contract_dev"
         ],
-        "notes": "Enterprise sales rep; not technical"
+        "notes": "Co-created the crypto custody and smart contract infrastructure for Facebook's Novi digital wallet; served as CISO of a16z Crypto auditing and advising DeFi protocol security across the firm's portfolio; co-founded Bastion to build secure web3 infrastructure for enterprise brands, with deep expertise in blockchain security, key management, and smart contract auditing."
       },
       {
-        "name": "Riya Shah",
-        "company": "GrowthCo",
-        "role": "SDR",
-        "linkedin_url": "https://linkedin.com/in/riyashah",
-        "email": "riya@growthco.com",
-        "source": "cold_list",
-        "persona": "",
-        "why_relevant": "No clear ICP persona match from available fields. Flagged for avoid persona 'sales_only'. Score breakdown: avoid_penalty:sales_only(-12).",
-        "fit_score": 0,
-        "priority": "needs_review",
+        "name": "Riyaz Faizullabhoy",
+        "company": "Bastion",
+        "role": "Co-Founder & CTO",
+        "linkedin_url": "",
+        "email": "",
+        "source": "web_search: techcrunch.com 'Former a16z execs launch Bastion' Sep 2023; cnbc.com Oct 2021; a16zcrypto.com announcement",
+        "persona": "crypto_infra_engineer",
+        "why_relevant": "Matches ICP persona 'crypto_infra_engineer'. Score breakdown: persona_match:crypto_infra_engineer(+48), founder_or_lead_signal(+8).",
+        "fit_score": 56,
+        "priority": "medium",
         "outreach_angle": "",
         "status": "not_contacted",
         "tags": [
-          "avoid:sales_only"
+          "crypto_infra_engineer"
         ],
-        "notes": "Sales development rep; no technical background"
-      },
-      {
-        "name": "Hana Sato",
-        "company": "QuickBiz",
-        "role": "Business Development",
-        "linkedin_url": "https://linkedin.com/in/hanasato",
-        "email": "hana@quickbiz.co",
-        "source": "cold_list",
-        "persona": "",
-        "why_relevant": "No clear ICP persona match from available fields. Flagged for avoid persona 'generic_networker'. Score breakdown: avoid_penalty:generic_networker(-15).",
-        "fit_score": 0,
-        "priority": "needs_review",
-        "outreach_angle": "",
-        "status": "not_contacted",
-        "tags": [
-          "avoid:generic_networker"
-        ],
-        "notes": "Generic networker; BD role; no clear AI connection"
+        "notes": "Co-built the crypto custody infrastructure for Facebook's Novi wallet (formerly Calibra) as a senior security/blockchain infrastructure engineer; subsequently served as CTO of a16z Crypto advising portfolio protocols on security architecture; co-founded Bastion ($25M seed) to build web3 enterprise infrastructure\u2014deep background in key management, secure enclaves, and distributed custody systems."
       }
     ],
     "approved": [],
@@ -631,444 +636,19 @@
     "rejected": []
   },
   "ops": {
-    "workstreams": [
-      {
-        "name": "guest_outreach",
-        "status": "active"
-      },
-      {
-        "name": "venue_outreach",
-        "status": "active"
-      },
-      {
-        "name": "sponsor_partner_outreach",
-        "status": "active"
-      },
-      {
-        "name": "rsvp_tracking",
-        "status": "active"
-      },
-      {
-        "name": "retention",
-        "status": "active"
-      },
-      {
-        "name": "basic_ops",
-        "status": "active"
-      }
-    ],
-    "outreach_queue": [
-      {
-        "name": "Alex Chen",
-        "company": "Modal",
-        "role": "Founding Engineer",
-        "channel": "email",
-        "priority": "high",
-        "fit_score": "0.92",
-        "outreach_angle": "serverless GPU runtime for agents",
-        "message": "Subject: Small AI builders night in SF next week \u2014 thought of you\n\nHey Alex, saw your work on serverless GPU runtime for agents. I'm putting together a small AI builders event in SF next week for founders/operators working around goal is to build brand and community around agent infrastructure.. Thought you'd be a strong fit for the room \u2014 would love to have you if you're around.",
-        "follow_up_message": "Hey Alex, bumping this \u2014 happy to send the details if you're potentially around.",
-        "status": "draft_ready",
-        "last_touch": "",
-        "notes": ""
-      },
-      {
-        "name": "Priya Rao",
-        "company": "Stealth",
-        "role": "Founder",
-        "channel": "email",
-        "priority": "high",
-        "fit_score": "0.85",
-        "outreach_angle": "agent evals",
-        "message": "Subject: Small AI builders night in SF next week \u2014 thought of you\n\nHey Priya, saw your work on agent evals. I'm putting together a small AI builders event in SF next week for founders/operators working around goal is to build brand and community around agent infrastructure.. Thought you'd be a strong fit for the room \u2014 would love to have you if you're around.",
-        "follow_up_message": "Hey Priya, bumping this \u2014 happy to send the details if you're potentially around.",
-        "status": "draft_ready",
-        "last_touch": "",
-        "notes": ""
-      },
-      {
-        "name": "Ben Ortiz",
-        "company": "LangChain",
-        "role": "DevRel",
-        "channel": "email",
-        "priority": "high",
-        "fit_score": "0.78",
-        "outreach_angle": "builder community + DX",
-        "message": "Subject: Small AI builders night in SF next week \u2014 thought of you\n\nHey Ben, saw your work on builder community + DX. I'm putting together a small AI builders event in SF next week for founders/operators working around goal is to build brand and community around agent infrastructure.. Thought you'd be a strong fit for the room \u2014 would love to have you if you're around.",
-        "follow_up_message": "Hey Ben, bumping this \u2014 happy to send the details if you're potentially around.",
-        "status": "draft_ready",
-        "last_touch": "",
-        "notes": ""
-      },
-      {
-        "name": "Maya Singh",
-        "company": "Anthropic",
-        "role": "PM",
-        "channel": "linkedin",
-        "priority": "medium",
-        "fit_score": "0.7",
-        "outreach_angle": "Claude tools roadmap",
-        "message": "Hey Maya, saw your work on Claude tools roadmap. I'm putting together a small AI builders event in SF next week for founders/operators working around goal is to build brand and community around agent infrastructure.. Thought you'd be a strong fit for the room \u2014 would love to have you if you're around.",
-        "follow_up_message": "Hey Maya, bumping this \u2014 happy to send the details if you're potentially around.",
-        "status": "draft_ready",
-        "last_touch": "",
-        "notes": ""
-      },
-      {
-        "name": "Jordan Lee",
-        "company": "Independent",
-        "role": "Researcher",
-        "channel": "email",
-        "priority": "medium",
-        "fit_score": "0.62",
-        "outreach_angle": "agent reliability research",
-        "message": "Subject: Small AI builders night in SF next week \u2014 thought of you\n\nHey Jordan, saw your work on agent reliability research. I'm putting together a small AI builders event in SF next week for founders/operators working around goal is to build brand and community around agent infrastructure.. Thought you'd be a strong fit for the room \u2014 would love to have you if you're around.",
-        "follow_up_message": "Hey Jordan, bumping this \u2014 happy to send the details if you're potentially around.",
-        "status": "draft_ready",
-        "last_touch": "",
-        "notes": ""
-      },
-      {
-        "name": "Sam Kim",
-        "company": "YC company",
-        "role": "Ops Lead",
-        "channel": "linkedin",
-        "priority": "medium",
-        "fit_score": "0.55",
-        "outreach_angle": "internal agent ops",
-        "message": "Hey Sam, saw your work on internal agent ops. I'm putting together a small AI builders event in SF next week for founders/operators working around goal is to build brand and community around agent infrastructure.. Thought you'd be a strong fit for the room \u2014 would love to have you if you're around.",
-        "follow_up_message": "Hey Sam, bumping this \u2014 happy to send the details if you're potentially around.",
-        "status": "draft_ready",
-        "last_touch": "",
-        "notes": ""
-      },
-      {
-        "name": "Dana Patel",
-        "company": "Bigco",
-        "role": "EM",
-        "channel": "email",
-        "priority": "low",
-        "fit_score": "0.48",
-        "outreach_angle": "enterprise agent rollout",
-        "message": "Subject: Small AI builders night in SF next week \u2014 thought of you\n\nHey Dana, saw your work on enterprise agent rollout. I'm putting together a small AI builders event in SF next week for founders/operators working around goal is to build brand and community around agent infrastructure.. Thought you'd be a strong fit for the room \u2014 would love to have you if you're around.",
-        "follow_up_message": "Hey Dana, bumping this \u2014 happy to send the details if you're potentially around.",
-        "status": "draft_ready",
-        "last_touch": "",
-        "notes": ""
-      },
-      {
-        "name": "Chris Wong",
-        "company": "Indie",
-        "role": "Hacker",
-        "channel": "linkedin",
-        "priority": "low",
-        "fit_score": "0.45",
-        "outreach_angle": "indie agent hacking",
-        "message": "Hey Chris, saw your work on indie agent hacking. I'm putting together a small AI builders event in SF next week for founders/operators working around goal is to build brand and community around agent infrastructure.. Thought you'd be a strong fit for the room \u2014 would love to have you if you're around.",
-        "follow_up_message": "Hey Chris, bumping this \u2014 happy to send the details if you're potentially around.",
-        "status": "draft_ready",
-        "last_touch": "",
-        "notes": ""
-      }
-    ],
+    "workstreams": [],
+    "outreach_queue": [],
     "rsvp_tracker": [],
-    "retention_plan": [
-      {
-        "name": "Alex Chen",
-        "rsvp_status": "no_response",
-        "accepted_date": "",
-        "calendar_invite_sent": "false",
-        "reminder_48h_sent": "false",
-        "day_of_reminder_sent": "false",
-        "show_up_probability": "0.20",
-        "risk_level": "high",
-        "recommended_action": "Bump message; try second channel"
-      },
-      {
-        "name": "Priya Rao",
-        "rsvp_status": "no_response",
-        "accepted_date": "",
-        "calendar_invite_sent": "false",
-        "reminder_48h_sent": "false",
-        "day_of_reminder_sent": "false",
-        "show_up_probability": "0.20",
-        "risk_level": "high",
-        "recommended_action": "Bump message; try second channel"
-      },
-      {
-        "name": "Ben Ortiz",
-        "rsvp_status": "no_response",
-        "accepted_date": "",
-        "calendar_invite_sent": "false",
-        "reminder_48h_sent": "false",
-        "day_of_reminder_sent": "false",
-        "show_up_probability": "0.20",
-        "risk_level": "high",
-        "recommended_action": "Bump message; try second channel"
-      },
-      {
-        "name": "Maya Singh",
-        "rsvp_status": "no_response",
-        "accepted_date": "",
-        "calendar_invite_sent": "false",
-        "reminder_48h_sent": "false",
-        "day_of_reminder_sent": "false",
-        "show_up_probability": "0.20",
-        "risk_level": "medium",
-        "recommended_action": "Bump message; try second channel"
-      },
-      {
-        "name": "Jordan Lee",
-        "rsvp_status": "no_response",
-        "accepted_date": "",
-        "calendar_invite_sent": "false",
-        "reminder_48h_sent": "false",
-        "day_of_reminder_sent": "false",
-        "show_up_probability": "0.20",
-        "risk_level": "medium",
-        "recommended_action": "Bump message; try second channel"
-      },
-      {
-        "name": "Sam Kim",
-        "rsvp_status": "no_response",
-        "accepted_date": "",
-        "calendar_invite_sent": "false",
-        "reminder_48h_sent": "false",
-        "day_of_reminder_sent": "false",
-        "show_up_probability": "0.20",
-        "risk_level": "medium",
-        "recommended_action": "Bump message; try second channel"
-      },
-      {
-        "name": "Dana Patel",
-        "rsvp_status": "no_response",
-        "accepted_date": "",
-        "calendar_invite_sent": "false",
-        "reminder_48h_sent": "false",
-        "day_of_reminder_sent": "false",
-        "show_up_probability": "0.20",
-        "risk_level": "medium",
-        "recommended_action": "Bump message; try second channel"
-      },
-      {
-        "name": "Chris Wong",
-        "rsvp_status": "no_response",
-        "accepted_date": "",
-        "calendar_invite_sent": "false",
-        "reminder_48h_sent": "false",
-        "day_of_reminder_sent": "false",
-        "show_up_probability": "0.20",
-        "risk_level": "medium",
-        "recommended_action": "Bump message; try second channel"
-      }
-    ],
-    "basic_ops_checklist": [
-      {
-        "area": "people",
-        "status": "draft"
-      },
-      {
-        "area": "catering",
-        "status": "draft"
-      },
-      {
-        "area": "check_in",
-        "status": "draft"
-      },
-      {
-        "area": "av",
-        "status": "draft"
-      },
-      {
-        "area": "supplies",
-        "status": "draft"
-      }
-    ]
+    "retention_plan": [],
+    "basic_ops_checklist": []
   },
   "venues": {
-    "requirements": {
-      "target_size": 100,
-      "format": "evening reception, ~3 hours",
-      "needs": [
-        "AV/mic",
-        "outside food allowed",
-        "load-in window",
-        "wheelchair accessible"
-      ]
-    },
-    "pipeline": [
-      {
-        "venue_name": "Shack15",
-        "contact_name": "",
-        "contact_email": "",
-        "location": "SF Ferry Building",
-        "capacity": "150",
-        "estimated_cost": "",
-        "availability": "unknown",
-        "food_policy": "unknown",
-        "av": "unknown",
-        "status": "to_contact",
-        "last_touch": "",
-        "reply_summary": "",
-        "next_step": "Send outreach email + request walkthrough"
-      },
-      {
-        "venue_name": "Frontier Tower",
-        "contact_name": "",
-        "contact_email": "",
-        "location": "SF SoMa",
-        "capacity": "120",
-        "estimated_cost": "",
-        "availability": "unknown",
-        "food_policy": "unknown",
-        "av": "unknown",
-        "status": "to_contact",
-        "last_touch": "",
-        "reply_summary": "",
-        "next_step": "Send outreach email + request walkthrough"
-      },
-      {
-        "venue_name": "South Park Commons",
-        "contact_name": "",
-        "contact_email": "",
-        "location": "SF SoMa",
-        "capacity": "100",
-        "estimated_cost": "",
-        "availability": "unknown",
-        "food_policy": "unknown",
-        "av": "unknown",
-        "status": "to_contact",
-        "last_touch": "",
-        "reply_summary": "",
-        "next_step": "Send outreach email + request walkthrough"
-      },
-      {
-        "venue_name": "The Pearl",
-        "contact_name": "",
-        "contact_email": "",
-        "location": "SF Dogpatch",
-        "capacity": "200",
-        "estimated_cost": "",
-        "availability": "unknown",
-        "food_policy": "unknown",
-        "av": "unknown",
-        "status": "to_contact",
-        "last_touch": "",
-        "reply_summary": "",
-        "next_step": "Send outreach email + request walkthrough"
-      },
-      {
-        "venue_name": "AGI House",
-        "contact_name": "",
-        "contact_email": "",
-        "location": "Hillsborough",
-        "capacity": "80",
-        "estimated_cost": "",
-        "availability": "unknown",
-        "food_policy": "unknown",
-        "av": "unknown",
-        "status": "to_contact",
-        "last_touch": "",
-        "reply_summary": "",
-        "next_step": "Send outreach email + request walkthrough"
-      }
-    ]
+    "requirements": {},
+    "pipeline": []
   },
   "sponsors": {
-    "partner_icp": [
-      {
-        "category": "ai_infra_devtools"
-      },
-      {
-        "category": "startup_communities"
-      },
-      {
-        "category": "coworking_startup_spaces"
-      },
-      {
-        "category": "recruiting_talent"
-      },
-      {
-        "category": "cloud_data_platforms"
-      },
-      {
-        "category": "local_founder_communities"
-      }
-    ],
-    "pipeline": [
-      {
-        "organization": "Modal",
-        "category": "ai_infra_devtools",
-        "poc_name": "",
-        "poc_email": "",
-        "warm_intro": "",
-        "value_prop": "co-host slot or food/drinks sponsor for curated AI builder night",
-        "status": "to_contact",
-        "last_touch": "",
-        "next_step": "Find warm intro or send cold outreach",
-        "notes": ""
-      },
-      {
-        "organization": "LangChain",
-        "category": "ai_infra_devtools",
-        "poc_name": "",
-        "poc_email": "",
-        "warm_intro": "",
-        "value_prop": "co-host slot or food/drinks sponsor for curated AI builder night",
-        "status": "to_contact",
-        "last_touch": "",
-        "next_step": "Find warm intro or send cold outreach",
-        "notes": ""
-      },
-      {
-        "organization": "South Park Commons",
-        "category": "startup_communities",
-        "poc_name": "",
-        "poc_email": "",
-        "warm_intro": "",
-        "value_prop": "co-host slot or food/drinks sponsor for curated AI builder night",
-        "status": "to_contact",
-        "last_touch": "",
-        "next_step": "Find warm intro or send cold outreach",
-        "notes": ""
-      },
-      {
-        "organization": "AGI House",
-        "category": "startup_communities",
-        "poc_name": "",
-        "poc_email": "",
-        "warm_intro": "",
-        "value_prop": "co-host slot or food/drinks sponsor for curated AI builder night",
-        "status": "to_contact",
-        "last_touch": "",
-        "next_step": "Find warm intro or send cold outreach",
-        "notes": ""
-      },
-      {
-        "organization": "Shack15",
-        "category": "coworking_startup_spaces",
-        "poc_name": "",
-        "poc_email": "",
-        "warm_intro": "",
-        "value_prop": "co-host slot or food/drinks sponsor for curated AI builder night",
-        "status": "to_contact",
-        "last_touch": "",
-        "next_step": "Find warm intro or send cold outreach",
-        "notes": ""
-      },
-      {
-        "organization": "AWS Startups",
-        "category": "cloud_data_platforms",
-        "poc_name": "",
-        "poc_email": "",
-        "warm_intro": "",
-        "value_prop": "co-host slot or food/drinks sponsor for curated AI builder night",
-        "status": "to_contact",
-        "last_touch": "",
-        "next_step": "Find warm intro or send cold outreach",
-        "notes": ""
-      }
-    ]
+    "partner_icp": [],
+    "pipeline": []
   },
   "state": {
     "open_questions": [
@@ -1079,113 +659,52 @@
       "Who is the primary host / face of the event?"
     ],
     "risks": [],
-    "blockers": [
-      "Venue not confirmed"
-    ],
-    "next_actions": [
-      "Send first batch of 10 high-priority guest invites",
-      "Contact 10 venue candidates and request availability + capacity + AV",
-      "Create event page copy for Luma / manual ticketing",
-      "Schedule 48h and day-of reminder cadence"
-    ],
-    "approval_queue": [
-      {
-        "item": "First batch of guest invite drafts",
-        "owner": "organizer",
-        "status": "pending_review"
-      },
-      {
-        "item": "Venue shortlist (top 5)",
-        "owner": "organizer",
-        "status": "pending_review"
-      }
-    ],
+    "blockers": [],
+    "next_actions": [],
+    "approval_queue": [],
     "activity_log": [
       {
-        "run_id": "objective_agent-356ebdf6",
-        "timestamp": "2026-05-05T06:48:54.519282+00:00",
+        "run_id": "objective_agent-c1ee21c4",
+        "timestamp": "2026-05-06T04:23:11.659318+00:00",
         "agent_name": "objective_agent",
-        "summary": "Normalized objective for a 100-person curated tech community event in SF."
+        "summary": "Normalized 5-person 'hackathon' in unspecified city; goal_len=90, desired_attendees_len=80."
       },
       {
-        "run_id": "audience_agent-9ba734b4",
-        "timestamp": "2026-05-05T06:48:54.520083+00:00",
+        "run_id": "audience_agent-831bf989",
+        "timestamp": "2026-05-06T04:23:47.765430+00:00",
         "agent_name": "audience_agent",
-        "summary": "Defined 5 ICP personas and 4 avoid personas; emitted scoring rubric."
+        "summary": "Audience designer status=ok; defined 8 ICP personas, 5 avoid personas; target_mix has 8 entries."
       },
       {
-        "run_id": "sourcing_agent-7fd08044",
-        "timestamp": "2026-05-05T06:48:54.520532+00:00",
+        "run_id": "sourcing_agent-bb6d6f26",
+        "timestamp": "2026-05-06T04:24:40.607308+00:00",
         "agent_name": "sourcing_agent",
-        "summary": "Generated 5 sourcing queries, normalized 10 prospects from seed CSV."
+        "summary": "Generated 5 sourcing queries; sourced 8 prospects (curator: ok, target: 5)."
       },
       {
-        "run_id": "room_balance_agent-f10e02a3",
-        "timestamp": "2026-05-05T06:48:54.520970+00:00",
+        "run_id": "room_balance_agent-0f124470",
+        "timestamp": "2026-05-06T04:24:40.608915+00:00",
         "agent_name": "room_balance_agent",
-        "summary": "Top 6 prospects: gaps in ai_agent_founder, ai_infra_builder; overrepresented: none."
+        "summary": "Top 5 prospects: gaps in none; overrepresented: meta_crypto_engineer."
       },
       {
-        "run_id": "run_intelligence-dd5c31bc",
-        "timestamp": "2026-05-05T06:48:54.523740+00:00",
+        "run_id": "run_intelligence-630f2f46",
+        "timestamp": "2026-05-06T04:24:40.611641+00:00",
         "agent_name": "run_intelligence",
-        "summary": "Pipeline complete: 10 prospects scored, 4 high-priority, top_gap=ai_agent_founder."
-      },
-      {
-        "run_id": "pm_agent-9dd2c506",
-        "timestamp": "2026-05-05T06:49:18.012033+00:00",
-        "agent_name": "pm_agent",
-        "summary": "set 6 workstreams, 4 next actions, 1 blockers"
-      },
-      {
-        "run_id": "outreach_agent-0d2cb501",
-        "timestamp": "2026-05-05T06:49:18.013336+00:00",
-        "agent_name": "outreach_agent",
-        "summary": "8 drafts (high=3, med=3, low=2)"
-      },
-      {
-        "run_id": "venue_agent-617f1582",
-        "timestamp": "2026-05-05T06:49:18.013897+00:00",
-        "agent_name": "venue_agent",
-        "summary": "venue_crm.csv (5 rows) + venue_outreach_email.md"
-      },
-      {
-        "run_id": "sponsor_partner_agent-598cf283",
-        "timestamp": "2026-05-05T06:49:18.014419+00:00",
-        "agent_name": "sponsor_partner_agent",
-        "summary": "sponsor_partner_crm.csv (6 rows) + outreach drafts"
-      },
-      {
-        "run_id": "retention_agent-de7b890c",
-        "timestamp": "2026-05-05T06:49:18.015049+00:00",
-        "agent_name": "retention_agent",
-        "summary": "need ~133 accepted RSVPs at 75% show-up; 3 high-risk"
-      },
-      {
-        "run_id": "basic_ops_agent-c5cfb12e",
-        "timestamp": "2026-05-05T06:49:18.015704+00:00",
-        "agent_name": "basic_ops_agent",
-        "summary": "basic_ops_checklist.md + run_of_show.md generated"
-      },
-      {
-        "run_id": "reply_tracker-3b8d87a3",
-        "timestamp": "2026-05-05T06:49:26.157286+00:00",
-        "agent_name": "reply_tracker",
-        "summary": "updated guest_crm=4, queue=4, tracker=4"
+        "summary": "Pipeline complete: 8 prospects scored, 4 high-priority, top_gap=none."
       }
     ],
     "last_agent_run": {
-      "agent_name": "reply_tracker",
-      "timestamp": "2026-05-05T06:49:26.157286+00:00",
-      "summary": "updated guest_crm=4, queue=4, tracker=4",
-      "run_id": "reply_tracker-3b8d87a3"
+      "agent_name": "run_intelligence",
+      "timestamp": "2026-05-06T04:24:40.611641+00:00",
+      "summary": "Pipeline complete: 8 prospects scored, 4 high-priority, top_gap=none.",
+      "run_id": "run_intelligence-630f2f46"
     }
   },
   "visibility": {
     "latest_summary_files": [
-      "docs/ops_summary.md",
-      "docs/structure_map.md",
-      "docs/agent_activity_log.md"
+      "docs/intelligence_summary.md",
+      "docs/structure_map.md"
     ],
     "latest_trace_file": "logs/agent_runs.jsonl",
     "latest_activity_log": "docs/agent_activity_log.md"

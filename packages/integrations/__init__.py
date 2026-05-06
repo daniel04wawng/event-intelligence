@@ -1,8 +1,7 @@
 """
-Connectors to external tools used in the event workflow.
+External system connectors (empty by design).
 
-- luma: attendee list export parsing
-- clay: push enriched profiles to Clay workspace
-- airtable: sync attendee data to Airtable base
-- hubspot: create/update contacts and deals
+Add integrations one at a time (Clay, HubSpot, Gmail, calendar, etc.) as you
+wire a cowork-style orchestrator. Keep each connector small and callable from
+tools/MCP rather than importing FastAPI here.
 """

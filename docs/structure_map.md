@@ -1,6 +1,8 @@
 # Structure Map — Agentic Ops
 
-This document is the map of the Agentic Ops layer (branch: `feature/agentic-ops-mvp`)
+**Repo note:** Empty placeholder modules under `packages/integrations/` were removed from this
+repository; add real connectors incrementally as tools. The rest of this file describes the
+Agentic Ops layer (branch: `feature/agentic-ops-mvp`)
 and the contract it shares with Event Intelligence (branch: `feature/event-intelligence-mvp`).
 
 ## 1. Repo areas touched
@@ -156,3 +158,5 @@ python -m packages.ops.reply_tracker
 - Replace `google_sheets_stub.write_csv_to_sheet_stub` with Sheets API sync.
 - Replace `luma_stub.create_luma_event_copy_stub` with Luma API event creation.
 - Wire `reply_tracker.run` to a Gmail/Poke webhook instead of `replies.csv`.
+
+<!-- last pipeline run: 2026-05-06T04:24:40.610493+00:00 -->

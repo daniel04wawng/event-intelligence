@@ -58,8 +58,13 @@ def log_agent_run(
     event_state: Optional[dict[str, Any]] = None,
     log_path: str = LOG_FILE,
     md_path: str = ACTIVITY_LOG_MD,
+    persist_to_disk: bool = True,
 ) -> dict[str, Any]:
-    """Write a structured trace entry; returns the entry dict."""
+    """Write a structured trace entry; returns the entry dict.
+
+    When persist_to_disk is False (e.g. dry-run previews), skip JSONL, Markdown,
+    and DB writes — only optional in-memory activity_log on event_state.
+    """
     entry = {
         "run_id": run_id or create_run_id(agent_name),
         "timestamp": _now_iso(),
@@ -76,17 +81,30 @@ def log_agent_run(
         "next_actions": next_actions or [],
     }
 
-    # 1. JSONL trace
-    p = _ensure_parent(log_path)
-    with p.open("a") as f:
-        f.write(json.dumps(entry) + "\n")
+    if persist_to_disk:
+        # 1. JSONL trace
+        p = _ensure_parent(log_path)
+        with p.open("a") as f:
+            f.write(json.dumps(entry) + "\n")
 
-    # 2. Markdown activity log
-    append_activity_log_markdown(entry, md_path=md_path)
+        # 2. Markdown activity log
+        append_activity_log_markdown(entry, md_path=md_path)
 
     # 3. In-memory event_state
     if event_state is not None:
         append_event_state_activity(event_state, entry)
+
+    # 4. DB (best-effort — never fails the pipeline)
+    if persist_to_disk:
+        try:
+            from packages.shared import db as _db
+            if _db.is_db_enabled():
+                event_id = None
+                if event_state is not None:
+                    event_id = event_state.get("_db_event_id")
+                _db.append_agent_run(entry, event_id=event_id)
+        except Exception:
+            pass
 
     return entry
 
