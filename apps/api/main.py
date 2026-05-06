@@ -16,7 +16,7 @@ async def health():
     return {"status": "ok"}
 
 # Route registration
-from apps.api.routes import events, sponsors, attendees, reports, pipeline
+from routes import events, sponsors, attendees, reports, pipeline
 app.include_router(events.router, prefix="/events")
 app.include_router(sponsors.router, prefix="/sponsors")
 app.include_router(attendees.router, prefix="/attendees")
